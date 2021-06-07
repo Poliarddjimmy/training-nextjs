@@ -24,7 +24,7 @@ const Register = () => {
   }
 
   useEffect(() => {
-    
+
   }, [])
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Register = () => {
   return (
     <Layout>
       <div className="stm_lms_breadcrumbs stm_lms_breadcrumbs__header_default">
-        <nav className="woocommerce-breadcrumb">
+        <nav className="learnht-breadcrumb">
           <div className="container">
             <Link href="/">Home</Link>
             <i className="fa fa-chevron-right"></i>register
