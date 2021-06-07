@@ -10,17 +10,18 @@ const Layout = ({ children }) => {
   const currentUser = useSelector((state) => state.user.currentUser)
   const dispatch = useDispatch()
   const { addToast } = useToasts();
+  const router = useRouter();
 
   const logout = () => {
     try {
       dispatch(logoutAction())
       addToast('You are logged out', { appearance: 'success', autoDismiss: true, });
+      router.push('/login')
     } catch (error) {
       addToast(error.message, { appearance: 'error', autoDismiss: true, });
     }
   }
 
-  const router = useRouter();
   return <Fragment>
     <div id="wrapper">
       <div id="header" className="transparent_header_off" data-color="">
