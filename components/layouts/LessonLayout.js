@@ -9,9 +9,9 @@ const LessonLayout = ({ children }) => {
             <div className="row align-items-center">
               <div className="col-md-3 col-sm-12 col-xs-12 align-items-center">
                 <div className="logo-unit">
-                  <a href="/">
+                  <Link href="/">
                     <img className="img-responsive logo_transparent_static visible" src="/images/logo.png" style={{ width: "253px" }} alt="MasterStudy – Education Center WordPress Theme" />
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="col-md-6   align-items-center">
@@ -32,7 +32,7 @@ const LessonLayout = ({ children }) => {
                   </div>
                   <div className="collapse navbar-collapse pull-right mr-4" >
                     <div className="bg-light p-3" style={{ borderRadius: '30px' }}>
-                      <i class="fa fa-user mr-2" aria-hidden="true"></i>
+                      <i class="fa-icon-stm_icon_user mr-2" aria-hidden="true"></i>
                       Hello, Djimmy Po...
                       <i class="fa fa-chevron-circle-down ml-1" aria-hidden="true"></i>
                     </div>
