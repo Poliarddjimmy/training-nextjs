@@ -32,6 +32,7 @@ export const registerAction = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const response = await API.signup(payload);
+      console.log(response)
       return response;
     } catch (e) {
       console.error(e)
@@ -40,7 +41,7 @@ export const registerAction = createAsyncThunk(
 );
 
 export const fetchUsersAction = createAsyncThunk(
-  Users.FETCH_USER,
+  Users.FETCH_USERS,
   async (payload, thunkAPI) => {
     try {
       const response = await API.fetchUsers();
