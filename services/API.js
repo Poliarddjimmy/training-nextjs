@@ -11,12 +11,16 @@ class API {
     return axiosService.post(`/auth/register`, payload)
   }
 
-  static users = payload => {
+  static createUser = payload => {
     return axiosService.post(`/users`, payload)
   }
 
-  static fetchUser = payload => {
-    return axiosService.get(`/users/${payload}`);
+  static fetchUsers = () => {
+    return axiosService.get(`/users`);
+  }
+
+  static showUser = (payload) => {
+    return axiosService.get(`/users/${payload.id}`, payload)
   }
 
   static editUser = (payload) => {
@@ -27,16 +31,30 @@ class API {
     return axiosService.delete(`/users/${payload.id}`, payload)
   }
 
-  static usersList = () => {
-    return axiosService.get(`/users`)
-  }
-
-  static update = (payload) => {
-    return axiosService.put(`/users/${payload.id}`, payload);
-  }
-
   static passwordChange = (payload) => {
     return axiosService.post(`/users/password-change`, payload);
+  }
+
+
+  // course andpoint
+  static createCourse = payload => {
+    return axiosService.post(`/courses`, payload)
+  }
+
+  static fetchCourses = () => {
+    return axiosService.get(`/courses`);
+  }
+
+  static showCourse = (payload) => {
+    return axiosService.get(`/courses/${payload.id}`, payload)
+  }
+
+  static editCourse = (payload) => {
+    return axiosService.put(`/courses/${payload.id}`, payload)
+  }
+
+  static deleteCourse = (payload) => {
+    return axiosService.delete(`/courses/${payload.id}`, payload)
   }
 }
 
