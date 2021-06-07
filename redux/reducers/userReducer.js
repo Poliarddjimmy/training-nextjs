@@ -16,7 +16,8 @@ const initialState = {
   users: [],
   user: null,
   currentUser: null,
-  token: null
+  token: null,
+  error: null
 }
 
 const UserReducer = createReducer(initialState, (builder) => {
@@ -25,10 +26,16 @@ const UserReducer = createReducer(initialState, (builder) => {
       state.loading = true;
     })
     .addCase(loginAction.fulfilled, (state, action) => {
-      const { user, token } = action.payload.data;
-      state.loading = false;
-      state.currentUser = user;
-      state.token = token
+      if(action.payload === undefined){
+        state.error = "Invalid email or password"
+      } 
+      else{
+        const { user, token } = action.payload.data;
+        state.loading = false;
+        state.currentUser = user;
+        state.token = token;
+        state.error = null
+      }
     })
     .addCase(loginAction.rejected, (state, action) => {
       state.loading = false;
