@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Layout from "../components/layouts/layout"
 import Link from 'next/link'
 import { useForm, Controller } from "react-hook-form";
@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 
 const Login = () => {
   const currentUser = useSelector((state) => state.user.currentUser)
+  const error = useSelector((state) => state.user.error)
+  const [loginError, setLoginError] = useState()
 
   const { control, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm();
   const dispatch = useDispatch()
@@ -24,8 +26,12 @@ const Login = () => {
   }
 
   useEffect(() => {
-    
+    setLoginError("")
   }, [])
+
+  useEffect(() => {
+    (error && !currentUser) && setLoginError("Invalid email or password")
+  }, [error, currentUser])
 
   useEffect(() => {
     if (currentUser) {
@@ -37,7 +43,7 @@ const Login = () => {
   return (
     <Layout>
       <div className="stm_lms_breadcrumbs stm_lms_breadcrumbs__header_default">
-        <nav className="woocommerce-breadcrumb">
+        <nav className="learnht-breadcrumb">
           <div className="container">
             <Link href="/">Home</Link>
             <i className="fa fa-chevron-right"></i>Login
@@ -50,6 +56,7 @@ const Login = () => {
             <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12">
               <h1>Login form</h1>
               <p>Inter your email and password to login</p>
+              {loginError && <small className="text-danger mb-3 mt-n3">{loginError}</small>}
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
                   <Controller
@@ -67,7 +74,6 @@ const Login = () => {
                     }
                   />
                   {errors.email && <small className="invalid-feedback">The email field is required</small>}
-
                 </div>
 
                 <div className="form-group">
@@ -75,7 +81,7 @@ const Login = () => {
                     name="password"
                     control={control}
                     defaultValue=""
-                    rules={{ required: true, minLength: 6 }}
+                    rules={{ required: true }}
                     render={({ field }) =>
                       <input
                         {...field}
@@ -86,7 +92,6 @@ const Login = () => {
                     }
                   />
                   {errors.password && <small className="invalid-feedback">The password field is required and must bigger or equal to 6</small>}
-
                 </div>
 
                 <div className="form-group">
