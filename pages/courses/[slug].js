@@ -12,9 +12,9 @@ const SingleCourse = () => {
 
   return (
     <Layout>
-      <div className="product-template-default single single-product postid-92 theme-masterstudy woocommerce woocommerce-page woocommerce-js default stm_preloader_ wpb-js-composer js-comp-ver-6.5.0 vc_responsive has_envato_iframe" id="main" style={{ marginBottom: "386px", }}>
+      <div className="product-template-default single single-product postid-92 theme-masterstudy learnht learnht-page learnht-js default stm_preloader_ wpb-js-composer js-comp-ver-6.5.0 vc_responsive has_envato_iframe" id="main" style={{ marginBottom: "386px", }}>
         <div className="stm_lms_breadcrumbs stm_lms_breadcrumbs__header_default">
-          <nav className="woocommerce-breadcrumb">
+          <nav className="learnht-breadcrumb">
             <div className="container">
               <Link href="/">Home</Link>
               <i className="fa fa-chevron-right"></i>
@@ -29,7 +29,7 @@ const SingleCourse = () => {
           <div className="row">
             <div className="col-lg-9 col-md-9 col-sm-12 col-xs-12">
               <div className="sidebar_position_right">
-                <div className="woocommerce-notices-wrapper"></div>
+                <div className="learnht-notices-wrapper"></div>
                 <div id="product-92" className="post-92 product type-product status-publish has-post-thumbnail product_cat-graphic product_cat-logical-thinking product_cat-management first instock sale featured shipping-taxable purchasable product-type-simple">
                   <div className="single_product_title">
                     <h2 className="product_title entry-title">How to Design a Logo – a Beginners Course</h2>
@@ -59,15 +59,15 @@ const SingleCourse = () => {
                         </div>
                         <span className="price">
                           <del aria-hidden="true">
-                            <span className="woocommerce-Price-amount amount">
+                            <span className="learnht-Price-amount amount">
                               <bdi>
-                                <span className="woocommerce-Price-currencySymbol">$</span>89.00</bdi>
+                                <span className="learnht-Price-currencySymbol">$</span>89.00</bdi>
                             </span>
                           </del>
                           <ins>
-                            <span className="woocommerce-Price-amount amount">
+                            <span className="learnht-Price-amount amount">
                               <bdi>
-                                <span className="woocommerce-Price-currencySymbol">$</span>50.00</bdi>
+                                <span className="learnht-Price-currencySymbol">$</span>50.00</bdi>
                             </span>
                           </ins>
                         </span>
@@ -101,12 +101,12 @@ const SingleCourse = () => {
                         <p className="price heading_font">
                           <label className="h6 stm_price_label">Price</label>
                           <del aria-hidden="true">
-                            <span className="woocommerce-Price-amount amount">
-                              <span className="woocommerce-Price-currencySymbol">$</span>89.00</span>
+                            <span className="learnht-Price-amount amount">
+                              <span className="learnht-Price-currencySymbol">$</span>89.00</span>
                           </del>
                           <ins>
-                            <span className="woocommerce-Price-amount amount">
-                              <span className="woocommerce-Price-currencySymbol">$</span>50.00</span>
+                            <span className="learnht-Price-amount amount">
+                              <span className="learnht-Price-currencySymbol">$</span>50.00</span>
                           </ins>
                         </p>
                       </div>
