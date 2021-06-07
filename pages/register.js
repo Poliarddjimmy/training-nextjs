@@ -2,12 +2,12 @@ import { useEffect } from "react"
 import Layout from "../components/layouts/layout"
 import Link from 'next/link'
 import { useForm, Controller } from "react-hook-form";
-import { loginAction } from "../redux/actions/userAction"
+import { registerAction } from "../redux/actions/userAction"
 import { useDispatch, useSelector } from 'react-redux'
 import { useToasts } from 'react-toast-notifications';
 import { useRouter } from "next/router";
 
-const Login = () => {
+const Register = () => {
   const currentUser = useSelector((state) => state.user.currentUser)
 
   const { control, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm();
@@ -17,7 +17,7 @@ const Login = () => {
 
   const onSubmit = data => {
     try {
-      dispatch(loginAction(data))
+      dispatch(registerAction(data))
     } catch (error) {
       addToast(error.message, { appearance: 'error', autoDismiss: true, });
     }
@@ -40,7 +40,7 @@ const Login = () => {
         <nav className="woocommerce-breadcrumb">
           <div className="container">
             <Link href="/">Home</Link>
-            <i className="fa fa-chevron-right"></i>Login
+            <i className="fa fa-chevron-right"></i>register
             </div>
         </nav>
       </div>
@@ -48,9 +48,28 @@ const Login = () => {
         <div className="row">
           <div className="d-flex justify-content-center">
             <div className="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-              <h1>Login form</h1>
-              <p>Inter your email and password to login</p>
+              <h1>Register form</h1>
+              <p>Fill this form to register</p>
               <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="form-group">
+                  <Controller
+                    name="name"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({ field }) =>
+                      <input
+                        {...field}
+                        type="text"
+                        className={`form-control ${(errors.name) && `is-invalid`}`}
+                        placeholder="Your full name"
+                      />
+                    }
+                  />
+                  {errors.name && <small className="invalid-feedback">The name field is required</small>}
+
+                </div>
+
                 <div className="form-group">
                   <Controller
                     name="email"
@@ -72,6 +91,25 @@ const Login = () => {
 
                 <div className="form-group">
                   <Controller
+                    name="username"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({ field }) =>
+                      <input
+                        {...field}
+                        type="text"
+                        className={`form-control ${(errors.username) && `is-invalid`}`}
+                        placeholder="username"
+                      />
+                    }
+                  />
+                  {errors.username && <small className="invalid-feedback">The username field is required</small>}
+
+                </div>
+
+                <div className="form-group">
+                  <Controller
                     name="password"
                     control={control}
                     defaultValue=""
@@ -81,7 +119,7 @@ const Login = () => {
                         {...field}
                         type="password"
                         className={`form-control ${(errors.password) && `is-invalid`}`}
-                        placeholder="password"
+                        placeholder="Password"
                       />
                     }
                   />
@@ -90,7 +128,26 @@ const Login = () => {
                 </div>
 
                 <div className="form-group">
-                  <button type="submit" className="btn btn-lg btn-dark">Login</button>
+                  <Controller
+                    name="password_confirmation"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: true, validate: (value) => value === watch('password') || "Passwords don't match." }}
+                    render={({ field }) =>
+                      <input
+                        {...field}
+                        type="password"
+                        className={`form-control ${(errors.password_confirmation) && `is-invalid`}`}
+                        placeholder="Conform your password"
+                      />
+                    }
+                  />
+                  {errors.password_confirmation && <small className="invalid-feedback">{errors.password_confirmation.message}</small>}
+
+                </div>
+
+                <div className="form-group">
+                  <button type="submit" className="btn btn-lg btn-dark">Register</button>
                 </div>
               </form>
             </div>
@@ -102,4 +159,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Register

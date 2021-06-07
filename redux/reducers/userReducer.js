@@ -38,7 +38,7 @@ const UserReducer = createReducer(initialState, (builder) => {
       state.loading = true;
     })
     .addCase(registerAction.fulfilled, (state, action) => {
-      const { user, token } = action.payload;
+      const { user, token } = action.payload.data;
       state.loading = false;
       state.currentUser = user;
       state.token = token

@@ -1,7 +1,25 @@
 import { Fragment } from "react"
+import { useSelector, useDispatch } from 'react-redux'
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { logoutAction } from "../../redux/actions/userAction"
+import { useToasts } from 'react-toast-notifications';
+
 const Layout = ({ children }) => {
+
+  const currentUser = useSelector((state) => state.user.currentUser)
+  const dispatch = useDispatch()
+  const { addToast } = useToasts();
+
+  const logout = () => {
+    try {
+      dispatch(logoutAction())
+      addToast('You are logged out', { appearance: 'success', autoDismiss: true, });
+    } catch (error) {
+      addToast(error.message, { appearance: 'error', autoDismiss: true, });
+    }
+  }
+
   const router = useRouter();
   return <Fragment>
     <div id="wrapper">
@@ -11,14 +29,22 @@ const Layout = ({ children }) => {
             <div className="clearfix">
               <div className="pull-left language-switcher-unit">
                 <div className="stm_current_language dropdown_toggle" id="lang_dropdown" data-toggle="dropdown">
-                  English s<i className="fa fa-chevron-down"></i>
+                  English <i className="fa fa-chevron-down"></i>
                 </div>
               </div>
               <div className="pull-right">
                 <div className="header_login_url">
-                  <a><i className="fa fa-user"></i><Link href="/login"> Login</Link></a>
-                  <span className="vertical_divider"></span>
-                  <Link href="/register">Register</Link>
+                  {currentUser ?
+                    <>
+                      <span className="cursor-pointer" onClick={logout}>Logout</span>
+                    </>
+                    :
+                    <>
+                      <a><i className="fa fa-user"></i><Link href="/login"> Login</Link></a>
+                      <span className="vertical_divider"></span>
+                      <Link href="/register">Register</Link>
+                    </>
+                  }
                 </div>
               </div>
               <div className="pull-right">
@@ -42,9 +68,9 @@ const Layout = ({ children }) => {
             <div className="row">
               <div className="col-md-3 col-sm-12 col-xs-12">
                 <div className="logo-unit">
-                  <a href="/">
-                    <img className="img-responsive logo_transparent_static visible" src="/images/logo.png" style={{ width: "253px" }} alt="MasterStudy – Education Center WordPress Theme" />
-                  </a>
+                  <Link href="/">
+                    <img className="img-responsive logo_transparent_static visible cursor-pointer" src="/images/logo.png" style={{ width: "253px" }} alt="MasterStudy – Education Center WordPress Theme" />
+                  </Link>
                 </div>
                 <button type="button" className="navbar-toggle collapsed hidden-lg hidden-md" data-toggle="collapse" data-target="#header_menu_toggler">
                   <span className="sr-only">Toggle navigation</span>

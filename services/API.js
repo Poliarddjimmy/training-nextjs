@@ -8,7 +8,7 @@ class API {
   }
 
   static signup = payload => {
-    return axiosService.post(`/auth/signup`, payload)
+    return axiosService.post(`/auth/register`, payload)
   }
 
   static users = payload => {
