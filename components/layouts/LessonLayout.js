@@ -15,7 +15,7 @@ const LessonLayout = ({ children }) => {
                 </div>
               </div>
               <div className="col-md-6   align-items-center">
-                <h3>Lesson title</h3>
+                <h3>Course name</h3>
                 <span className="align-items-center d-flex" style={{ fontFamily: "Open Sans", fontSize: "14px" }}>
                   <i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>
                   Back to dashboard
@@ -24,10 +24,10 @@ const LessonLayout = ({ children }) => {
 
               <div className="col-md-3 ">
                 <div className="header_main_menu_wrapper clearfix" style={{ marginTop: "11px" }}>
-                  <div className="pull-right hidden-xs right_buttons ml-3" style={{ marginTop:"10px", }}>
+                  <div className="pull-right hidden-xs right_buttons ml-3" style={{ marginTop: "10px", }}>
                     <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
                   </div>
-                  <div className="pull-right hidden-xs right_buttons ml-3 mr-3" style={{ marginTop:"10px", }}>
+                  <div className="pull-right hidden-xs right_buttons ml-3 mr-3" style={{ marginTop: "10px", }}>
                     <i class="fa fa-heart fa-2x" aria-hidden="true"></i>
                   </div>
                   <div className="collapse navbar-collapse pull-right mr-4" >
@@ -53,15 +53,26 @@ const LessonLayout = ({ children }) => {
 
         <div id="footer_copyright">
           <div className="container">
-            <div className="row">
-              <div className="col-md-4">
-                erer
+            <div className="row p-4">
+              <div className="col-md-4 d-flex align-items-center" style={{ fontSize: "18px" }}>
+                <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 mr-2" style={{ width: "45px" }} >
+                  <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                </span>
+                <span className="text-white fa-1x">Privious lesson title</span>
               </div>
               <div className="col-md-4">
-                ere
+                <div className="d-flex justify-content-center align-items-center ">
+                  ere
+                </div>
               </div>
               <div className="col-md-4">
-                ef
+                <div className="d-flex justify-content-end align-items-center " style={{ fontSize: "18px" }}>
+
+                <span className="text-white fa-1x">Next lesson title</span>
+                  <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 ml-2" style={{ width: "45px" }} >
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </span>
+                </div>
               </div>
             </div>
           </div>
