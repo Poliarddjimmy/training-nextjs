@@ -7,13 +7,15 @@ import { useRouter } from "next/router";
 const Lesson = () => {
 
   const lesson = useSelector(state => state.lesson.lesson)
+  const currentUser = useSelector(state=> state.user.currentUser)
 
   const dispatch = useDispatch()
   const router = useRouter()
 
   useEffect(() => {
+    !currentUser && router.push("/login");
     router.query?.slug && dispatch(showLessonAction(router.query?.slug))
-  }, [router.query?.slug])
+  }, [router.query?.slug, currentUser])
 
   return (
     <LessonLayout next={lesson?.next_lesson} previous={lesson?.previous_lesson}>

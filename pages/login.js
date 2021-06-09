@@ -36,7 +36,7 @@ const Login = () => {
   useEffect(() => {
     if (currentUser) {
       addToast('You are logged in', { appearance: 'success', autoDismiss: true, });
-      router.push("/")
+      router.back();
     }
   }, [currentUser])
 
