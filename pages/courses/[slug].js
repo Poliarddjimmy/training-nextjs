@@ -23,7 +23,6 @@ const SingleCourse = () => {
   const defCollaps = id => {
     collaps === id ? setCollaps('') : setCollaps(id)
   }
-  console.log(course)
 
   return (
     <Layout>
