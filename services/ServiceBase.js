@@ -1,15 +1,13 @@
 import axios from "axios";
 import { CURRENT_API_URL } from '../utils/config';
+// import { store } from '../redux/store'
 import { Auth } from '../redux/actions/types';
 
 import { isExpired, decodeToken } from "react-jwt";
 
-// When it's a device, iOS and Android use the same base url
-const axiosOptions = {
-  baseURL: CURRENT_API_URL,  
-};
-
-const axiosService = axios.create(axiosOptions);
+const axiosService = axios.create({
+  baseURL: CURRENT_API_URL
+});
 
 const interceptor = store => {
   axiosService.interceptors.request.use(
