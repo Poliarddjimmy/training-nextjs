@@ -1,14 +1,29 @@
-import { useState } from "react"
-import Link from "next/link"
-import Layout from "../../components/layouts/layout"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Layout from "../../components/layouts/layout";
+import { useDispatch, useSelector } from "react-redux";
+import { showCourseAction } from "../../redux/actions/courseAction";
+import { useRouter } from "next/router";
+
 
 const SingleCourse = () => {
 
   const [collaps, setCollaps] = useState();
+  const [tab, setTab] = useState('description');
+
+  const course = useSelector(state => state.course.course)
+
+  const dispatch = useDispatch()
+  const router = useRouter()
+
+  useEffect(() => {
+    router.query?.slug && dispatch(showCourseAction(router.query?.slug))
+  }, [router.query?.slug])
 
   const defCollaps = id => {
     collaps === id ? setCollaps('') : setCollaps(id)
   }
+  console.log(course)
 
   return (
     <Layout>
@@ -20,8 +35,10 @@ const SingleCourse = () => {
               <i className="fa fa-chevron-right"></i>
               <Link href="/courses">All courses</Link>
               <i className="fa fa-chevron-right"></i>
-              {/* <Link href="/product-category/management/">Social Media Management</Link> */}
-              <i className="fa fa-chevron-right"></i>How to Design a Logo – a Beginners Course</div>
+              <Link href={`/categories/${course?.category.slug}`}><span className="cursor-pointer">{course?.category.name}</span></Link>
+              <i className="fa fa-chevron-right"></i>
+              {course?.name}
+            </div>
           </nav>
         </div>
 
@@ -32,7 +49,7 @@ const SingleCourse = () => {
                 <div className="learnht-notices-wrapper"></div>
                 <div id="product-92" className="post-92 product type-product status-publish has-post-thumbnail product_cat-graphic product_cat-logical-thinking product_cat-management first instock sale featured shipping-taxable purchasable product-type-simple">
                   <div className="single_product_title">
-                    <h2 className="product_title entry-title">How to Design a Logo – a Beginners Course</h2>
+                    <h2 className={course?.name}>{course?.name}</h2>
                   </div>
                   <div className="single_product_after_title">
                     <div className="clearfix">
@@ -46,7 +63,7 @@ const SingleCourse = () => {
                               <div className="label h6">Category:</div>
                               <div className="value h6">
                                 <a href="/">
-                                  Graphic &amp; Web Design <span>/</span>
+                                  {course?.category.name}<span>/</span>
                                 </a>
                               </div>
                             </div>
@@ -58,7 +75,7 @@ const SingleCourse = () => {
                           <span style={{ width: "86%" }}>Rated <strong className="rating">4.30</strong> out of 5</span>
                         </div>
                         <span className="price">
-                          <del aria-hidden="true">
+                          <del >
                             <span className="learnht-Price-amount amount">
                               <bdi>
                                 <span className="learnht-Price-currencySymbol">$</span>89.00</bdi>
@@ -85,10 +102,9 @@ const SingleCourse = () => {
                         <figure className="training-gallery__wrapper" style={{ width: "1000%", transitionDuration: "0s", transform: "translate3d(0px, 0px, 0px)" }}>
                           <div data-thumb-alt="" className="training-gallery__image flex-active-slide" style={{ width: "838px", float: "left", display: "block", position: "relative", overflow: "hidden" }}>
                             <a href="/images/img.jpg">
-                              <img width="1000" height="666" src="/images/img.jpg" className="wp-post-image" alt="" />
+                              <img src={course?.picture || `/images/courset.jpeg`} className="img-thumbnail img-responsive" alt="" />
                             </a>
-                            <img role="presentation" alt="" src="/images/img.jpg" className="zoomImg" style={{ position: "absolute", top: "-1.65788px", left: "-74.1599px", opacity: 0, width: "999px", height: "665px", border: "none", maxWidth: "none", maxHeight: "none" }} />
-
+                            <img role="presentation" alt="" src={course?.picture || `/images/courset.jpeg`} className="zoomImg" style={{ position: "absolute", top: "-1.65788px", left: "-74.1599px", opacity: 0, width: "999px", height: "665px", border: "none", maxWidth: "none", maxHeight: "none" }} />
                           </div>
                         </figure>
                       </div>
@@ -97,25 +113,9 @@ const SingleCourse = () => {
 
                   <div className="stm_product_meta_single_page visible-sm visible-xs">
                     <div className="heading_font product_main_data">
-                      <div>
-                        <p className="price heading_font">
-                          <label className="h6 stm_price_label">Price</label>
-                          <del aria-hidden="true">
-                            <span className="learnht-Price-amount amount">
-                              <span className="learnht-Price-currencySymbol">$</span>89.00</span>
-                          </del>
-                          <ins>
-                            <span className="learnht-Price-amount amount">
-                              <span className="learnht-Price-currencySymbol">$</span>50.00</span>
-                          </ins>
-                        </p>
+                      <div className="single_product_title">
+                        <h2 className="product_title entry-title">Course details</h2>
                       </div>
-                      <p className="stock in-stock">166 in stock</p>
-                      <form className="cart" action="https://stylemixthemes.com/masterstudy/ms/courses/how-to-design-a-logo/" method="post" enctype="multipart/form-data">
-                        <div className="quantity">
-                          <input type="number" id="quantity_60bc6a0672181" className="input-text qty text" step="1" min="1" max="166" name="quantity" value="1" title="Qty" size="4" pattern="[0-9]*" inputmode="numeric" /></div>
-                        <button type="submit" name="add-to-cart" value="92" className="single_add_to_cart_button button alt">Add to cart</button>
-                      </form>
                     </div>
                     <div className="stm_product_sidebar_meta_units">
                       <div className="stm_product_sidebar_meta_unit">
@@ -181,15 +181,19 @@ const SingleCourse = () => {
                     </div>
                   </div>
 
-                  <div className="vc_row wpb_row vc_row-fluid vc_custom_1436877382226">
+                  <div className="d-flex pt-3">
+                    <div className={`p-2 border rounded mr-2 cursor-pointer ${tab === 'description' ? 'bg-warning text-white' : ''}`} onClick={() => setTab('description')}>Description</div>
+                    <div className={`p-2 border rounded mr-2 cursor-pointer ${tab === 'requirement' ? 'bg-warning text-white' : ''} `} onClick={() => setTab('requirement')}>Requirements</div>
+                  </div>
+
+                  <div className={`vc_row wpb_row vc_row-fluid ${tab !== 'description' ? 'd-none' : ''}`}>
                     <div className="wpb_column vc_column_container vc_col-sm-12">
                       <div className="vc_column-inner">
-                        <div className="wpb_wrapper">
-                          <div className="wpb_text_column wpb_content_element ">
+                        <div className="">
+                          <div className="">
                             <div className="wpb_wrapper">
                               <h3 style={{ marginBottom: "21px" }}>COURSE DESCRIPTION</h3>
-                              <p style={{ marginBottom: "16px" }}>Maecenas cursus mauris libero, a imperdiet enim pellentesque id. Aliquam erat volutpat. Suspendisse sit amet sapien at risus efficitur sagittis. Pellentesque non ullamcorper justo. Vivamus commodo, sem et vestibulum eleifend, erat odio tristique enim, nec tempus tortor ligula in neque. Vestibulum eu commodo ante. Nunc volutpat nec diam a congue.</p>
-                              <p style={{ marginBottom: "16px" }}>Vivamus volutpat eros pulvinar velit laoreet, sit amet egestas erat dignissim. Sed quis rutrum tellus, sit amet viverra felis. Cras sagittis sem sit amet urna feugiat rutrum. Nam nulla ipsum, venenatis malesuada felis quis, ultricies convallis neque. Pellentesque tristique fringilla tempus. Vivamus bibendum nibh in dolor pharetra, a euismod nulla dignissim. Aenean viverra tincidunt nibh, in imperdiet nunc. Suspendisse eu ante pretium, consectetur leo at, congue quam. Nullam hendrerit porta ante vitae tristique. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum ligula libero, feugiat faucibus mattis eget, pulvinar et ligula.</p>
+                              {course?.description}
                             </div>
                           </div>
                         </div>
@@ -197,100 +201,19 @@ const SingleCourse = () => {
                     </div>
                   </div>
 
-                  <div className="vc_row wpb_row vc_row-fluid vc_custom_1435574544208">
+                  <div className={`vc_row wpb_row vc_row-fluid ${tab !== 'requirement' ? 'd-none' : ''} `}>
                     <div className="wpb_column vc_column_container vc_col-sm-12">
                       <div className="vc_column-inner">
                         <div className="wpb_wrapper">
-                          <div className="vc_custom_heading text_align_left">
-                            <h4 style={{ textAlign: "left", fontFamily: "Montserrat", fontWeight: 400, fontStyle: "normal" }} className="masterstudy-custom-title">Requirements</h4>
+                          <div className="wpb_wrapper">
+                            <h3 style={{ marginBottom: "21px" }}>COURSE REQUIREMENT</h3>
+                            requirement of the course will goes here
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-
-                  <div className="vc_row wpb_row vc_row-fluid vc_custom_1435305038672">
-                    <div className="wpb_column vc_column_container vc_col-sm-6">
-                      <div className="vc_column-inner">
-                        <div className="wpb_wrapper">
-                          <div className="wpb_text_column wpb_content_element ">
-                            <div className="wpb_wrapper">
-                              <ul>
-                                <li>Donec porta ultricies urna, faucibus magna dapibus.</li>
-                                <li>Etiam varius tortor ut ligula facilisis varius in a leo.</li>
-                                <li>Folutpat tempor tur duis mattis dapibus, felis amet.</li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="wpb_column vc_column_container vc_col-sm-6">
-                      <div className="vc_column-inner">
-                        <div className="wpb_wrapper">
-                          <div className="wpb_text_column wpb_content_element ">
-                            <div className="wpb_wrapper">
-                              <ul>
-                                <li>Donec porta ultricies urna, faucibus magna dapibus.</li>
-                                <li>Etiam varius tortor ut ligula facilisis varius in a leo.</li>
-                                <li>Folutpat tempor tur duis mattis dapibus, felis amet.</li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="vc_row wpb_row vc_row-fluid vc_custom_1435574551925">
-                    <div className="wpb_column vc_column_container vc_col-sm-12">
-                      <div className="vc_column-inner">
-                        <div className="wpb_wrapper">
-                          <div className="vc_custom_heading text_align_left">
-                            <h4 style={{ textAlign: "left", fontFamily: "Montserrat", fontWeight: 400, fontStyle: "normal" }} className="masterstudy-custom-title">What is the target audience?</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="vc_row wpb_row vc_row-fluid">
-                    <div className="wpb_column vc_column_container vc_col-sm-12">
-                      <div className="vc_column-inner">
-                        <div className="wpb_wrapper">
-                          <div className="wpb_text_column wpb_content_element ">
-                            <div className="wpb_wrapper">
-                              <ul>
-                                <li>This course is intended for anyone interested in learning to master his or her own body.</li>
-                                <li>This course is aimed at beginners, so no previous experience with hand balancing skillts is necessary</li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="vc_row wpb_row vc_row-fluid vc_custom_1435574600454">
-                    <div className="wpb_column vc_column_container vc_col-sm-12">
-                      <div className="vc_column-inner">
-                        <div className="wpb_wrapper">
-                          <div className="wpb_text_column wpb_content_element ">
-                            <div className="wpb_wrapper">
-                              <p>Aenean viverra tincidunt nibh, in imperdiet nunc. Suspendisse eu ante pretium, consectetur leo at, congue quam. Nullam hendrerit porta ante vitae tristique. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum ligula libero, feugiat faucibus mattis eget, pulvinar et ligula.</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="vc_row wpb_row vc_row-fluid vc_custom_1435574626206">
-                    <div className="wpb_column vc_column_container vc_col-sm-12">
-                      <div className="vc_column-inner">
-                        <div className="wpb_wrapper">
-                          <div className="multiseparator"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <div className="vc_row wpb_row vc_row-fluid vc_custom_1435385624281">
                     <div className="wpb_column vc_column_container vc_col-sm-12">
                       <div className="vc_column-inner">
@@ -303,54 +226,59 @@ const SingleCourse = () => {
                     </div>
                   </div>
 
-
                   <div className="vc_row wpb_row vc_row-fluid">
                     <div className="wpb_column vc_column_container vc_col-sm-12">
                       <div className="vc_column-inner">
                         <div className="wpb_wrapper">
-                          <h4 className="course_title">Section 1: Introduction to Handstands</h4>
                           <div className="course_lessons_section">
-                            <div className="panel-group" id="accordion_4023" role="tablist" aria-multiselectable="true">
-                              <div className={`panel panel-default ${collaps === 'tab7188' ? 'panel-collapsed' : ''}`}>
-                                <div className="panel-heading" role="tab" id="heading_tab7188" >
-                                  <div className="course_meta_data" style={{ borderWidth: "0px" }}>
-                                    <div className="panel-title" >
-                                      <a className={`${collaps !== 'tab7188' ? 'collapsed' : ''} tapable`} role="button" data-toggle="collapse" onClick={() => defCollaps('tab7188')} aria-expanded={collaps === 'tab7188'} aria-controls="collapseOne" >
+                            {
+                              course?.chapters?.map((chapter, idx) =>
+                                <div key={chapter.slug} className="panel-group" id="accordion_4023" role="tablist" aria-multiselectable="true">
+                                  <div className={`panel panel-default ${collaps === chapter.slug ? 'panel-collapsed' : ''}`}>
+                                    <div className="panel-heading" role="tab" id="heading_tab7188" >
+                                      <div className="course_meta_data" style={{ borderWidth: "0px" }}>
+                                        <div className="panel-title" >
+                                          <a className={`${collaps !== chapter.slug ? 'collapsed' : ''} tapable`} role="button" data-toggle="collapse" onClick={() => defCollaps(chapter.slug)} aria-expanded={collaps === chapter.slug} aria-controls="collapseOne" >
 
-                                        <div className="pl-4 pr-4 d-flex justify-content-between">
-                                          <div className="d-flex">
-                                            <div className="mr-3">1</div>
-                                            <div className="mr-3 icon"><i className="fa fa fa-play-circle"></i></div>
+                                            <div className="pl-4 pr-4 d-flex justify-content-between">
+                                              <div className="d-flex">
+                                                {/* <div className="mr-3">1</div> */}
+                                                {/* <div className="mr-3 icon"><i className="fa fa fa-play-circle"></i></div> */}
 
-                                            <div className="course-title-holder">
-                                              <strong className="mr-3">Welcome to the Course!</strong>
-                                              <i className="fa fa-sort-down mr-3"></i>
-                                              <div className="stm_badge stm_small_badge">
-                                                <div className="badge_unit heading_font video">Video</div>
+                                                <div className="course-title-holder">
+                                                  <strong className="mr-3">Chapter {idx + 1}: {chapter.title}</strong>
+                                                  <i className="fa fa-sort-down mr-3"></i>
+                                                  {/* <div className="stm_badge stm_small_badge">
+                                                    <div className="badge_unit heading_font video">Video</div>
+                                                  </div> */}
+                                                </div>
                                               </div>
+                                            </div>
+                                          </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {
+                                      chapter.lessons.map((lesson, index) =>
+                                        <div key={index} id={chapter.slug} className={`panel-collapse collapse ${collaps === chapter.slug ? 'in' : ''}`} style={{ height: collaps !== chapter.slug && "0px" }} aria-expanded={collaps === chapter.slug} role="tabpanel" aria-labelledby="heading_tab7188">
+                                          <div className="pl-5 pr-5 pb-2">
+                                            <div className="">
+                                              <span className="">{idx + 1}.{index + 1} - </span>
+                                              <Link href={`/courses/lessons/${lesson.slug}`}>{lesson.title}</Link>
                                             </div>
                                           </div>
                                         </div>
-                                      </a>
-                                    </div>
+                                      )
+                                    }
                                   </div>
                                 </div>
-                                <div id="tab7188" className={`panel-collapse collapse ${collaps === 'tab7188' ? 'in' : ''}`} style={{ height: collaps !== 'tab7188' && "0px" }} aria-expanded={collaps === 'tab7188'} role="tabpanel" aria-labelledby="heading_tab7188">
-                                  <div className="pl-5 pr-5 pb-4">
-                                    <div className="">
-                                      <span className="">1.1 - </span>
-                                      <Link href="/courses/lessons/lesson">Sorry, you can view this section only after purchasing the course</Link>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                              )
+                            }
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
