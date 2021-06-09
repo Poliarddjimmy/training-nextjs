@@ -111,7 +111,7 @@ const Layout = ({ children }) => {
                     <li>
                       <form role="search" method="get" id="searchform-mobile" action="/">
                         <div className="search-wrapper">
-                          <input placeholder="Search..." type="text" className="form-control search-input" value="" name="s" />
+                          <input placeholder="Search..." type="text" className="form-control search-input" />
                           <button type="submit" className="search-submit">
                             <i className="fa fa-search"></i>
                           </button>
