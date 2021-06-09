@@ -17,6 +17,12 @@ const EDIT_COURSE = "courses/update";
 const CREATE_COURSE = "courses/create";
 const DELETE_COURSE = "courses/delete";
 
+const FETCH_LESSONS = "/lessons";
+const SHOW_LESSON = "lessons/show";
+const EDIT_LESSON = "lessons/update";
+const CREATE_LESSON = "lessons/create";
+const DELETE_LESSON = "lessons/delete";
+
 
 const Auth = {
   LOGIN,
@@ -42,8 +48,17 @@ const Courses = {
   DELETE_COURSE,
 }
 
+const Lessons = {
+  FETCH_LESSONS,
+  SHOW_LESSON,
+  EDIT_LESSON,
+  CREATE_LESSON,
+  DELETE_LESSON,
+}
+
 export {
   Auth,
   Users,
   Courses,
+  Lessons,
 };
