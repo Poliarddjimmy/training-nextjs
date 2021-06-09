@@ -21,7 +21,7 @@ const CourseReducer = createReducer(initialState, (builder) => {
     })
     .addCase(fetchCoursesAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.courses = action.payload;
+      state.courses = action.payload?.data?.courses;
     })
     .addCase(fetchCoursesAction.rejected, (state, action) => {
       state.loading = false;
@@ -32,7 +32,7 @@ const CourseReducer = createReducer(initialState, (builder) => {
     })
     .addCase(showCourseAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.course = action.payload;
+      state.course = action.payload?.data;
     })
     .addCase(showCourseAction.rejected, (state, action) => {
       state.loading = false;
