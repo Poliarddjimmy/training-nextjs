@@ -7297,3 +7297,7 @@ input[type="button"].btn-block {
   border-top-right-radius: 0.2rem;
   border-bottom-right-radius: 0.2rem;
 }
+
+.text-decoration-underline{
+  text-decoration: underline;
+}
