@@ -10,7 +10,7 @@ const LessonLayout = ({ children, previous, next }) => {
           <div className="containeri pl-4 pr-4 align-items-center">
             <div className="row align-items-center">
               <div className="col-md-3 col-sm-12 col-xs-12 align-items-center">
-                <div className="logo-unit">
+                <div className="logo-unit cursor-pointer">
                   <Link href="/">
                     <img className="img-responsive logo_transparent_static visible" src="/images/logo.png" style={{ width: "253px" }} alt="MasterStudy – Education Center WordPress Theme" />
                   </Link>

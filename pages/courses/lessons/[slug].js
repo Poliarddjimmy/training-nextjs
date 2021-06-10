@@ -4,10 +4,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { showLessonAction } from "../../../redux/actions/lessonAction";
 import { useRouter } from "next/router";
 
+import Modal from 'react-modal';
+import Link from "next/link";
 const Lesson = () => {
 
   const lesson = useSelector(state => state.lesson.lesson)
-  const currentUser = useSelector(state=> state.user.currentUser)
+  const currentUser = useSelector(state => state.user.currentUser)
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
 
   const dispatch = useDispatch()
   const router = useRouter()
@@ -17,18 +28,64 @@ const Lesson = () => {
     router.query?.slug && dispatch(showLessonAction(router.query?.slug))
   }, [router.query?.slug, currentUser])
 
+  const customStyles = {
+    content: {
+      top: '17%',
+      left: '20px',
+      right: 'auto',
+      bottom: 'auto',
+      maxWidth: '310px',
+      minWidth: '250px',
+      backgroundColor: '#fff',
+      fontSize: '1.1em',
+      borderWidth: '0.5px',
+      borderColor: '#DEE2E6',
+      borderRadius: '0px',
+      zIndex: 1
+      // transform: 'translate(-50%, -50%)'
+    },
+    overlay: {
+      backgroundColor: 'transparent !important'
+    },
+  };
+
   return (
     <LessonLayout next={lesson?.next_lesson} previous={lesson?.previous_lesson}>
       <div className="p-4 d-flex justify-content-between align-items-center">
         <div>
-          <i className="bg-dark p-3 text-white rounded-circle fa fa-list-ul fa-1x" ></i>
+          <i onClick={openModal} className="cursor-pointer bg-dark p-3 text-white rounded-circle fa fa-list-ul fa-1x" ></i>
+
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <h3>Other Lessons</h3>
+            <hr style={{ borderWidth: '3px', }} />
+            {
+              lesson?.course.chapters.map((chapter, idx) =>
+                <div key={chapter.slug}>
+                  <strong>{idx + 1} - {chapter.title}</strong>
+                  {chapter.lessons.map((lesson, index) =>
+                    <div className="ml-3 mb-2 mt-1 cursor-pointer">
+                      <Link href={`/courses/lessons/${lesson.slug}`}>
+                        <span className={router.query.slug === lesson.slug ? 'text-warning text-decoration-underline' : ''}> {idx + 1}.{index + 1} - {lesson.title}</span>
+                      </Link>
+                    </div>
+                  )}
+                  {/* <hr style={{ borderWidth: '3px', }} /> */}
+                </div>
+              )
+            }
+          </Modal>
         </div>
         <div>
           <i className="bg-dark p-3 text-white rounded-circle fa fa-question fa-1x" ></i>
         </div>
       </div>
 
-      <div className="container">
+      <div className="container" style={{ minHeight: "50vh" }}>
         <div className="row">
           <div className="d-flex align-items-center justify-content-center">
             <div className="col-lg-8 col-md-12">
