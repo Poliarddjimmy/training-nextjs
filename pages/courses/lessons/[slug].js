@@ -50,7 +50,7 @@ const Lesson = () => {
   };
 
   return (
-    <LessonLayout next={lesson?.next_lesson} previous={lesson?.previous_lesson}>
+    <LessonLayout next={lesson?.next_lesson} previous={lesson?.previous_lesson} previousChapter={lesson?.previous_lesson_by_chapter} nextChapter={lesson?.next_lesson_by_chapter}>
       <div className="p-4 d-flex justify-content-between align-items-center">
         <div>
           <i onClick={openModal} className="cursor-pointer bg-dark p-3 text-white rounded-circle fa fa-list-ul fa-1x" ></i>
@@ -68,7 +68,7 @@ const Lesson = () => {
                 <div key={chapter.slug}>
                   <strong>{idx + 1} - {chapter.title}</strong>
                   {chapter.lessons.map((lesson, index) =>
-                    <div className="ml-3 mb-2 mt-1 cursor-pointer">
+                    <div key={index} className="ml-3 mb-2 mt-1 cursor-pointer">
                       <Link href={`/courses/lessons/${lesson.slug}`}>
                         <span className={router.query.slug === lesson.slug ? 'text-warning text-decoration-underline' : ''}> {idx + 1}.{index + 1} - {lesson.title}</span>
                       </Link>

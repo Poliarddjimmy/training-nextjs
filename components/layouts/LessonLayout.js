@@ -1,7 +1,7 @@
 import { Fragment } from "react"
 import Link from "next/link"
 
-const LessonLayout = ({ children, previous, next }) => {
+const LessonLayout = ({ children, previous, next, previousChapter, nextChapter }) => {
 
   return <Fragment>
     <div id="wrapper">
@@ -55,14 +55,27 @@ const LessonLayout = ({ children, previous, next }) => {
           <div className="container">
             <div className="row p-4">
               <div className="col-md-4 ">
-                {previous && <Link href={`/courses/lessons/${previous}`}>
+                {previous ? <Link href={`/courses/lessons/${previous}`}>
                   <span className="d-flex align-items-center cursor-pointer" style={{ fontSize: "18px" }}>
-                    <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 mr-2" style={{ width: "45px" }} >
+                    <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 mr-2 bg-warning" style={{ width: "45px", height: "45px" }} >
                       <i className="fa fa-chevron-left" ></i>
                     </span>
-                    <span className="text-white fa-1x">Privious lesson title</span>
+                    <span className="text-white fa-1x">{previous}</span>
                   </span>
                 </Link>
+                  :
+                  previousChapter &&
+                  <Link href={`/courses/lessons/${previousChapter?.lesson}`}>
+                    <span className="d-flex align-items-center cursor-pointer" style={{ fontSize: "18px" }}>
+                      <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 mr-2 bg-warning" style={{ width: "45px", height: "45px" }} >
+                        <i className="fa fa-chevron-left" ></i>
+                      </span>
+                      <span className="d-flex flex-column text-white">
+                        <strong className="d-block text-warning">{previousChapter?.chapter}</strong>
+                        <span className="text-white fa-1x">{previousChapter?.lesson}</span>
+                      </span>
+                    </span>
+                  </Link>
                 }
               </div>
               <div className="col-md-4">
@@ -72,14 +85,27 @@ const LessonLayout = ({ children, previous, next }) => {
               </div>
               <div className="col-md-4">
                 <div>
-                  {next && <Link href={`/courses/lessons/${next}`}>
+                  {next ? <Link href={`/courses/lessons/${next}`}>
                     <span className="d-flex justify-content-end align-items-center cursor-pointer" style={{ fontSize: "18px" }}>
-                      <span className="text-white fa-1x">Next lesson title</span>
-                      <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 ml-2" style={{ width: "45px" }} >
+                      <span className="text-white fa-1x">{next}</span>
+                      <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 ml-2 bg-warning" style={{ width: "45px", height: "45px" }} >
                         <i className="fa fa-chevron-right" ></i>
                       </span>
                     </span>
                   </Link>
+                    :
+                    nextChapter &&
+                    <Link href={`/courses/lessons/${nextChapter?.lesson}`}>
+                      <span className="d-flex justify-content-end align-items-center cursor-pointer" style={{ fontSize: "18px" }}>
+                        <span className="d-flex flex-column text-white">
+                          <strong className="d-block text-warning">{nextChapter?.chapter}</strong>
+                          <span className="text-white fa-1x">Next lesson title</span>
+                        </span>
+                        <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 ml-2 bg-warning" style={{ width: "45px", height: "45px" }} >
+                          <i className="fa fa-chevron-right" ></i>
+                        </span>
+                      </span>
+                    </Link>
                   }
                 </div>
               </div>
