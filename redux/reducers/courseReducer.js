@@ -4,6 +4,8 @@ import {
   createCourseAction,
   editCourseAction,
   deleteCourseAction,
+  courseAccessAction,
+  courseRequestAction
 } from "../actions/courseAction";
 import { createReducer } from "@reduxjs/toolkit";
 
@@ -11,7 +13,8 @@ const initialState = {
   loading: false,
   courses: [],
   course: null,
-  error: null
+  error: null,
+  accessToCourse: false
 }
 
 const CourseReducer = createReducer(initialState, (builder) => {
@@ -34,7 +37,30 @@ const CourseReducer = createReducer(initialState, (builder) => {
       state.loading = false;
       state.course = action.payload?.data;
     })
+
     .addCase(showCourseAction.rejected, (state, action) => {
+      state.loading = false;
+    })
+    
+    .addCase(courseAccessAction.pending, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(courseAccessAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.accessToCourse = action.payload?.data;
+    })
+    .addCase(courseAccessAction.rejected, (state, action) => {
+      state.loading = false;
+    })
+    
+    .addCase(courseRequestAction.pending, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(courseRequestAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.accessToCourse = action.payload.data;
+    })
+    .addCase(courseRequestAction.rejected, (state, action) => {
       state.loading = false;
     })
 

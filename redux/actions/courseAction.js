@@ -27,6 +27,18 @@ export const showCourseAction = createAsyncThunk(
   }
 );
 
+export const courseAccessAction = createAsyncThunk(
+  Courses.COURSE_ACCESS,
+  async (payload, thunkAPI) => {
+    try {
+      const response = await API.courseAccess(payload);
+      return response;
+    } catch (e) {
+      console.error(e)
+    }
+  }
+);
+
 export const createCourseAction = createAsyncThunk(
   Courses.CREATE_COURSE,
   async (payload, thunkAPI) => {
@@ -56,6 +68,18 @@ export const deleteCourseAction = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const response = await API.deleteCourse(payload);
+      return response;
+    } catch (e) {
+      console.error(e)
+    }
+  }
+);
+
+export const courseRequestAction = createAsyncThunk(
+  Courses.REQUEST_COURSE,
+  async (payload, thunkAPI) => {
+    try {
+      const response = await API.courseRequest(payload);
       return response;
     } catch (e) {
       console.error(e)

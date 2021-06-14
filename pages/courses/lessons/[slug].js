@@ -3,6 +3,7 @@ import LessonLayout from "../../../components/layouts/LessonLayout"
 import { useDispatch, useSelector } from "react-redux";
 import { showLessonAction } from "../../../redux/actions/lessonAction";
 import { useRouter } from "next/router";
+import { courseAccessAction } from "../../../redux/actions/courseAction"
 
 import Modal from 'react-modal';
 import Link from "next/link";
@@ -11,7 +12,10 @@ const Lesson = () => {
   const lesson = useSelector(state => state.lesson.lesson)
   const currentUser = useSelector(state => state.user.currentUser)
 
+  const [access, setAccess] = useState()
+
   const [modalIsOpen, setIsOpen] = useState(false);
+
   function openModal() {
     setIsOpen(true);
   }
@@ -24,23 +28,38 @@ const Lesson = () => {
   const router = useRouter()
 
   useEffect(() => {
-    !currentUser && router.push("/login");
     router.query?.slug && dispatch(showLessonAction(router.query?.slug))
-  }, [router.query?.slug, currentUser])
+  }, [router.query?.slug])
+
+  useEffect(() => {
+    lesson?.course.slug && dispatch(courseAccessAction(lesson?.course.slug))
+      .then(res => {
+        if (res.payload?.data === false) {
+          router.push(`/courses/${lesson?.course.slug}?warning=butitfirst`);
+        }
+        setAccess(res.payload?.data)
+      }
+      )
+  }, [lesson?.course.slug])
+
+
+  useEffect(() => {
+    !currentUser && router.push("/login");
+  }, [currentUser])
 
   const customStyles = {
     content: {
-      top: '17%',
+      top: '20%',
       left: '20px',
       right: 'auto',
       bottom: 'auto',
       maxWidth: '310px',
       minWidth: '250px',
       backgroundColor: '#fff',
+      boxShadow: '1px 1px 1px 2px rgba(239,183,103,0.5)',
       fontSize: '1.1em',
       borderWidth: '0.5px',
       borderColor: '#DEE2E6',
-      borderRadius: '0px',
       zIndex: 1
       // transform: 'translate(-50%, -50%)'
     },
@@ -48,6 +67,8 @@ const Lesson = () => {
       backgroundColor: 'transparent !important'
     },
   };
+
+  console.log(access)
 
   return (
     <LessonLayout next={lesson?.next_lesson} previous={lesson?.previous_lesson} previousChapter={lesson?.previous_lesson_by_chapter} nextChapter={lesson?.next_lesson_by_chapter}>

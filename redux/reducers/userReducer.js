@@ -7,7 +7,7 @@ import {
   deleteUserAction,
   loginAction,
   logoutAction,
-  registerAction
+  registerAction,
 } from "../actions/userAction";
 import { createReducer } from "@reduxjs/toolkit";
 
@@ -17,7 +17,7 @@ const initialState = {
   user: null,
   currentUser: null,
   token: null,
-  error: null
+  error: null,
 }
 
 const UserReducer = createReducer(initialState, (builder) => {
@@ -55,15 +55,12 @@ const UserReducer = createReducer(initialState, (builder) => {
     })
 
     .addCase(logoutAction.pending, (state, action) => {
-      state.loading = true;
+      state.token = null;
+      state.currentUser = null;
     })
     .addCase(logoutAction.fulfilled, (state, action) => {
-      state.loading = false;
+      state.token = null;
       state.currentUser = null;
-      state.token = null
-    })
-    .addCase(logoutAction.rejected, (state, action) => {
-      state.loading = false;
     })
 
     .addCase(fetchUsersAction.pending, (state, action) => {

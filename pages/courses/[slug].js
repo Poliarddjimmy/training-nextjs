@@ -2,16 +2,32 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Layout from "../../components/layouts/layout";
 import { useDispatch, useSelector } from "react-redux";
-import { showCourseAction } from "../../redux/actions/courseAction";
+import { showCourseAction, courseAccessAction, courseRequestAction } from "../../redux/actions/courseAction";
 import { useRouter } from "next/router";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "../../components/payments/checkoutForm";
+import { useToasts } from 'react-toast-notifications';
 
+
+
+const stripPromise = loadStripe("pk_test_51HnTzqAEoJWPUiKcW6O3xeaLujtzRtqg2sZO0VcAX11sQVYrIFlZSxFMHWKKJhYBoNaZesz7vPRTYlD4GszN0REB00HZ5uloE6");
 
 const SingleCourse = () => {
+  const { addToast } = useToasts();
+
+  const course = useSelector(state => state.course.course)
+  const currentUser = useSelector(state => state.user.currentUser)
 
   const [collaps, setCollaps] = useState();
   const [tab, setTab] = useState('description');
+  const [status, setStatus] = useState("ready")
 
-  const course = useSelector(state => state.course.course)
+  const [access, setAccess] = useState()
+
+  useEffect(() => {
+    status && setStatus(status)
+  }, [status])
 
   const dispatch = useDispatch()
   const router = useRouter()
@@ -20,9 +36,44 @@ const SingleCourse = () => {
     router.query?.slug && dispatch(showCourseAction(router.query?.slug))
   }, [router.query?.slug])
 
+  useEffect(() => {
+    dispatch(courseAccessAction(router.query?.slug))
+      .then(res =>
+        setAccess(res.payload?.data)
+      )
+  }, [])
+
+  useEffect(() => {
+    router.query?.slug && dispatch(courseAccessAction(router.query?.slug))
+      .then(res =>
+        setAccess(res.payload?.data)
+      )
+  }, [router.query?.slug])
+
+  useEffect(() => {
+    access && setAccess(access)
+  }, [access])
+
+  const requestCourse = () => {
+    const payload = {
+      user_id: currentUser.id,
+      course_id: course?.id,
+      confirm: true
+    }
+    dispatch(courseRequestAction(payload))
+      .then(res =>
+        setAccess(res.payload?.data)
+      )
+  }
+
   const defCollaps = id => {
     collaps === id ? setCollaps('') : setCollaps(id)
   }
+
+  useEffect(() => {
+    router.query?.warning &&  addToast("Please buy the course first", { appearance: 'warning', autoDismiss: true, });
+  }, [router.query?.warning])
+  
 
   return (
     <Layout>
@@ -74,16 +125,17 @@ const SingleCourse = () => {
                           <span style={{ width: "86%" }}>Rated <strong className="rating">4.30</strong> out of 5</span>
                         </div>
                         <span className="price">
-                          <del >
+                          {/* <del >
                             <span className="learnht-Price-amount amount">
                               <bdi>
-                                <span className="learnht-Price-currencySymbol">$</span>89.00</bdi>
+                                <span className="learnht-Price-currencySymbol">$</span>
+                                {course?.requirement.price ? course?.requirement.price : "free"}</bdi>
                             </span>
-                          </del>
+                          </del> */}
                           <ins>
                             <span className="learnht-Price-amount amount">
                               <bdi>
-                                <span className="learnht-Price-currencySymbol">$</span>50.00</bdi>
+                                <span className="learnht-Price-currencySymbol"></span>{course?.requirement.price ? '$' + course?.requirement.price : "free"}</bdi>
                             </span>
                           </ins>
                         </span>
@@ -111,11 +163,31 @@ const SingleCourse = () => {
                   </div>
 
                   <div className="stm_product_meta_single_page visible-sm visible-xs">
+
                     <div className="heading_font product_main_data">
                       <div className="single_product_title">
                         <h2 className="product_title entry-title">Course details</h2>
                       </div>
+
+                      <span className="price">
+                        {/* <del >
+                          <span className="learnht-Price-amount amount">
+                            <bdi>
+                              <span className="learnht-Price-currencySymbol">$</span>{course?.requirement.price ? course?.requirement.price : "free"}</bdi>
+                          </span>
+                        </del> */}
+                        <ins>
+                          <span className="learnht-Price-amount amount">
+                            <bdi>
+                              <span className="learnht-Price-currencySymbol"></span>{course?.requirement.price ? '$' + course?.requirement.price : "free"}</bdi>
+                          </span>
+                        </ins>
+                      </span>
+
+
                     </div>
+
+
                     <div className="stm_product_sidebar_meta_units">
                       <div className="stm_product_sidebar_meta_unit">
                         <table>
@@ -124,7 +196,7 @@ const SingleCourse = () => {
                               <td className="icon">
                                 <i className="fa-icon-stm_icon_users"></i>
                               </td>
-                              <td className="value h5">166 Students</td>
+                              <td className="value h5">{course?.users_count} Students</td>
                             </tr>
                           </tbody>
                         </table>
@@ -136,7 +208,7 @@ const SingleCourse = () => {
                               <td className="icon">
                                 <i className="fa-icon-stm_icon_clock"></i>
                               </td>
-                              <td className="value h5">Duration: 72 hours</td>
+                              <td className="value h5">Duration: {course?.requirement.duration} hours</td>
                             </tr>
                           </tbody>
                         </table>
@@ -148,7 +220,7 @@ const SingleCourse = () => {
                               <td className="icon">
                                 <i className="fa-icon-stm_icon_bullhorn"></i>
                               </td>
-                              <td className="value h5">Lectures: 102</td>
+                              <td className="value h5">Lectures: {course?.lessons_count}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -181,8 +253,9 @@ const SingleCourse = () => {
                   </div>
 
                   <div className="d-flex pt-3">
-                    <div className={`p-2 border rounded mr-2 cursor-pointer ${tab === 'description' ? 'bg-warning text-white' : ''}`} onClick={() => setTab('description')}>Description</div>
-                    <div className={`p-2 border rounded mr-2 cursor-pointer ${tab === 'requirement' ? 'bg-warning text-white' : ''} `} onClick={() => setTab('requirement')}>Requirements</div>
+                    <div className={`p-2 border  mr-2 cursor-pointer ${tab === 'description' ? 'bg-warning text-white' : ''}`} onClick={() => setTab('description')}>Description</div>
+                    <div className={`p-2 border  mr-2 cursor-pointer ${tab === 'requirement' ? 'bg-warning text-white' : ''} `} onClick={() => setTab('requirement')}>Requirements</div>
+                    {!access && <div className={`p-2 border  mr-2 cursor-pointer ${tab === 'buy' ? 'bg-warning text-white' : ''} `} onClick={() => setTab('buy')}>Buy this course</div>}
                   </div>
 
                   <div className={`vc_row wpb_row vc_row-fluid ${tab !== 'description' ? 'd-none' : ''}`}>
@@ -206,7 +279,46 @@ const SingleCourse = () => {
                         <div className="wpb_wrapper">
                           <div className="wpb_wrapper">
                             <h3 style={{ marginBottom: "21px" }}>COURSE REQUIREMENT</h3>
-                            requirement of the course will goes here
+                            {course?.requirement.content}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={`vc_row wpb_row vc_row-fluid ${tab !== 'buy' ? 'd-none' : ''}`}>
+                    <div className="wpb_column vc_column_container vc_col-sm-12">
+                      <div className="vc_column-inner">
+                        <div className="">
+                          <div className="">
+                            <div className="wpb_wrapper">
+                              <h3 style={{ marginBottom: "21px" }}>BUY THIS COURSE</h3>
+                              {
+                                (currentUser) ?
+                                  !access ?
+                                    course?.requirement.price ?
+                                      status !== 'success' ?
+                                        <Elements stripe={stripPromise}>
+                                          <CheckoutForm course={course} currentUser={currentUser} success={() => setStatus("success")} />
+                                        </Elements>
+                                        :
+                                        "Your payment has been made successfully."
+                                      :
+                                      <>
+                                        <div>This course is free. Click to activate it!</div>
+                                        <button onClick={requestCourse} className="btn btn-warning mt-2 d-block">Activate</button>
+                                      </>
+                                    :
+                                    "This course is activated successfully!"
+                                  :
+                                  <>
+                                    Please, login or signup first <br />
+                                    <button className="btn btn-warning mt-2">
+                                      <Link href="/login"><span className="text-white">Login</span></Link>
+                                    </button>
+                                  </>
+                              }
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -263,7 +375,7 @@ const SingleCourse = () => {
                                           <div className="pl-5 pr-5 pb-2">
                                             <div className="">
                                               <span className="">{idx + 1}.{index + 1} - </span>
-                                              <Link href={`/courses/lessons/${lesson.slug}`}>{lesson.title}</Link>
+                                              <Link href={access ? `/courses/lessons/${lesson.slug}` : `/courses/${course?.slug}?warning='butitfirst'` }>{lesson.title}</Link>
                                             </div>
                                           </div>
                                         </div>
@@ -285,7 +397,22 @@ const SingleCourse = () => {
             <div className="col-lg-3 col-md-3 hidden-sm hidden-xs">
               <div className="stm_product_meta_single_page right">
                 <div className="single_product_title">
-                  <h2 className="product_title entry-title">Course details</h2>
+                  {/* <h2 className="product_title entry-title">Course details</h2> */}
+                  <span className="price">
+                    {/* <del >
+                      <span className="learnht-Price-amount amount">
+                        <bdi>
+                          <span className="learnht-Price-currencySymbol">$</span>{course?.requirement.price ? course?.requirement.price : "free"}</bdi>
+                      </span>
+                    </del> */}
+                    <ins>
+                      <span className="learnht-Price-amount amount">
+                        <bdi>
+                          <span className="learnht-Price-currencySymbol"></span>{course?.requirement.price ? '$' + course?.requirement.price : "free"}</bdi>
+                      </span>
+                    </ins>
+                  </span>
+
                 </div>
                 <div className="stm_product_sidebar_meta_units">
                   <div className="stm_product_sidebar_meta_unit">
@@ -295,7 +422,7 @@ const SingleCourse = () => {
                           <td className="icon">
                             <i className="fa-icon-stm_icon_users"></i>
                           </td>
-                          <td className="value h5">166 Students</td>
+                          <td className="value h5">{course?.users_count} Students</td>
                         </tr>
                       </tbody>
                     </table>
@@ -307,7 +434,7 @@ const SingleCourse = () => {
                           <td className="icon">
                             <i className="fa-icon-stm_icon_clock"></i>
                           </td>
-                          <td className="value h5">Duration: 72 hours</td>
+                          <td className="value h5">Duration: {course?.requirement.duration} hours</td>
                         </tr>
                       </tbody>
                     </table>
@@ -319,23 +446,12 @@ const SingleCourse = () => {
                           <td className="icon">
                             <i className="fa-icon-stm_icon_bullhorn"></i>
                           </td>
-                          <td className="value h5">Lectures: 102</td>
+                          <td className="value h5">Lectures: {course?.lessons_count}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
-                  <div className="stm_product_sidebar_meta_unit">
-                    <table>
-                      <tbody>
-                        <tr>
-                          <td className="icon">
-                            <i className="fa-icon-stm_icon_film-play"></i>
-                          </td>
-                          <td className="value h5">Video: 9 hours</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+
                   <div className="stm_product_sidebar_meta_unit">
                     <table>
                       <tbody>

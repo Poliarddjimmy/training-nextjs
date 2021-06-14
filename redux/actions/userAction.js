@@ -16,15 +16,7 @@ export const loginAction = createAsyncThunk(
 );
 
 export const logoutAction = createAsyncThunk(
-  Auth.LOGOUT,
-  async (payload, thunkAPI) => {
-    try {
-      const response = await API.logout(payload);
-      return response;
-    } catch (e) {
-      console.error(e)
-    }
-  }
+  Auth.LOGOUT
 );
 
 export const registerAction = createAsyncThunk(
@@ -112,5 +104,4 @@ export const deleteUserAction = createAsyncThunk(
     }
   }
 );
-
 

@@ -1,6 +1,4 @@
 import { axiosService } from "./ServiceBase"
-import axios from "axios";
-
 
 class API {
   static login = payload => {
@@ -47,6 +45,14 @@ class API {
 
   static showCourse = (payload) => {
     return axiosService.get(`/courses/${payload}`)
+  }
+
+  static courseAccess = (payload) => {
+    return axiosService.get(`/users/subscribe/${payload}`);
+  }
+
+  static courseRequest = (payload) => {
+    return axiosService.post(`/course_users/`, payload);
   }
 
   static editCourse = (payload) => {
