@@ -46,7 +46,8 @@ const interceptor = store => {
     async (error) => {
       if (error.message.includes("401")) {
         store.dispatch({
-          type: "users/logout/pending"
+          // type: "users/logout/fulfiled" 
+          type: Auth.LOGOUT
         })
       }
       if (error.response?.data?.token) {

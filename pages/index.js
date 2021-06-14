@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCoursesAction } from "../redux/actions/courseAction";
 
-
 export default function Home() {
   const allCourses = useSelector(state => state.course.courses)
   const [courses, setCourses] = useState(allCourses)
@@ -82,7 +81,7 @@ export default function Home() {
                                 <div className="pull-right sm-xs-pull-left">
                                   <div className="stm_featured_product_stock d-flex aligh-items-center justify-content-center">
                                     <i className="fa-icon-stm_icon_users"></i>
-                                    <span className="">163 Students</span></div>
+                                    <span className="">{course.users_count} Students</span></div>
                                 </div>
                               </div>
                               <div className="stm_archive_product_exceprt normal_font">

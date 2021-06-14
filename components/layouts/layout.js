@@ -14,7 +14,7 @@ const Layout = ({ children }) => {
 
   const logout = () => {
     try {
-      dispatch(logoutAction())
+      dispatch(logoutAction()) 
       addToast('You are logged out', { appearance: 'success', autoDismiss: true, });
       router.push('/login')
     } catch (error) {

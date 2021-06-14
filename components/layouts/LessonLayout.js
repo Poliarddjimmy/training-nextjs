@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 import Link from "next/link"
-
+ 
 const LessonLayout = ({ children, previous, next, previousChapter, nextChapter }) => {
 
   return <Fragment>
@@ -60,7 +60,7 @@ const LessonLayout = ({ children, previous, next, previousChapter, nextChapter }
                     <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 mr-2 bg-warning" style={{ width: "45px", height: "45px" }} >
                       <i className="fa fa-chevron-left" ></i>
                     </span>
-                    <span className="text-white fa-1x">{previous}</span>
+                    <span className="text-white-50 fa-1x">{previous}</span>
                   </span>
                 </Link>
                   :
@@ -71,8 +71,8 @@ const LessonLayout = ({ children, previous, next, previousChapter, nextChapter }
                         <i className="fa fa-chevron-left" ></i>
                       </span>
                       <span className="d-flex flex-column text-white">
-                        <strong className="d-block text-warning">{previousChapter?.chapter}</strong>
-                        <span className="text-white fa-1x">{previousChapter?.lesson}</span>
+                        <strong className="d-block text-warning"><span className="text-white-50">Chapter:</span> {previousChapter?.chapter}</strong>
+                        <span className="text-white-50 fa-1x">{previousChapter?.lesson}</span>
                       </span>
                     </span>
                   </Link>
@@ -87,7 +87,7 @@ const LessonLayout = ({ children, previous, next, previousChapter, nextChapter }
                 <div>
                   {next ? <Link href={`/courses/lessons/${next}`}>
                     <span className="d-flex justify-content-end align-items-center cursor-pointer" style={{ fontSize: "18px" }}>
-                      <span className="text-white fa-1x">{next}</span>
+                      <span className="text-white-50 fa-1x">{next}</span>
                       <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 ml-2 bg-warning" style={{ width: "45px", height: "45px" }} >
                         <i className="fa fa-chevron-right" ></i>
                       </span>
@@ -98,8 +98,8 @@ const LessonLayout = ({ children, previous, next, previousChapter, nextChapter }
                     <Link href={`/courses/lessons/${nextChapter?.lesson}`}>
                       <span className="d-flex justify-content-end align-items-center cursor-pointer" style={{ fontSize: "18px" }}>
                         <span className="d-flex flex-column text-white">
-                          <strong className="d-block text-warning">{nextChapter?.chapter}</strong>
-                          <span className="text-white fa-1x">Next lesson title</span>
+                          <strong className="d-block text-warning"><span className="text-white-50">Chapter:</span> {nextChapter?.chapter}</strong>
+                          <span className="text-white-50 fa-1x">{nextChapter?.lesson}</span>
                         </span>
                         <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 ml-2 bg-warning" style={{ width: "45px", height: "45px" }} >
                           <i className="fa fa-chevron-right" ></i>
