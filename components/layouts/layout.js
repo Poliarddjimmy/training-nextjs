@@ -126,9 +126,8 @@ const Layout = ({ children }) => {
 
               <div className="col-md-9 col-sm-9 col-sm-offset-0 hidden-xs hidden-sm">
                 <div className="stm_menu_toggler" data-text="Menu"></div>
-                <div className="header_main_menu_wrapper clearfix"
-                  style={{ marginTop: "11px" }}>
-                  <div className="pull-right hidden-xs right_buttons">
+                <div className="header_main_menu_wrapper clearfix" style={{ marginTop: "11px" }}>
+                  {/* <div className="pull-right hidden-xs right_buttons">
                     <div className="search-toggler-unit">
                       <div className="search-toggler" data-toggle="modal" data-target="#searchModal">
                         <i className="fa fa-search"></i>
@@ -139,7 +138,7 @@ const Layout = ({ children }) => {
                         <ul className="clearfix"></ul>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="collapse navbar-collapse pull-right">
                     <ul className="header-menu clearfix">
                       <li className={`menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-3293 ${router.pathname === '/' ? 'current-menu-item current_page_item current-menu-parent current_page_parent current_page_ancestor current-menu-ancestor' : ''}`}>
