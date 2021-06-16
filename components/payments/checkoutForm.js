@@ -4,7 +4,7 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import axios from "axios";
 
 
-const CheckoutForm = ({success, course, currentUser}) => {
+const CheckoutForm = ({setAccess, success, course, currentUser}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [active, setActive] = useState(true)
@@ -33,8 +33,9 @@ const CheckoutForm = ({success, course, currentUser}) => {
     } else {
       const { id } = paymentMethod;
       try {
-        const { data } = await axios.post('/api/charge/', { user_id: currentUser?.id, course_id: course?.id, id: id, amount: course?.requirement.price * 100, description: `payment for ${course?.name}` })
+        const res = await axios.post('/api/charge/', { user_id: currentUser?.id, course_id: course?.id, id: id, amount: course?.requirement.price * 100, description: `payment for ${course?.name}` })
         success();
+        setAccess(res.data.data)
       } catch (error) {
         console.log(error)
         setError(error)
