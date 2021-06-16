@@ -10413,6 +10413,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   color: #273044;
+  font-size: 18px;
 }
 article,
 aside,
@@ -10656,6 +10657,7 @@ body {
   background-color: #fff;
   color: #273044;
   font-family: "Montserrat";
+  font-size: 18px;
 }
 @font-face {
   font-family: "Glyphicons Halflings";
@@ -11461,14 +11463,14 @@ body {
   content: "\e260";
 }
 html {
-  font-size: 10px;
+  font-size: 18px;
   color: #273044;
   font-family: "Montserrat";
   -webkit-tap-highlight-color: transparent;
 }
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 1.42857143;
   color: #273044;
 }

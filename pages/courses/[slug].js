@@ -2,18 +2,17 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Layout from "../../components/layouts/layout";
 import { useDispatch, useSelector } from "react-redux";
-import { showCourseAction, courseAccessAction, courseRequestAction } from "../../redux/actions/courseAction";
-import { useRouter } from "next/router";
+import { showCourseAction, courseAccessAction } from "../../redux/actions/courseAction";
+import Router,{ useRouter } from "next/router";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../../components/payments/checkoutForm";
 import { useToasts } from 'react-toast-notifications';
-
-
+import { axiosService } from "../../services/ServiceBase";
+import Image from "next/image";
 
 const stripPromise = loadStripe("pk_test_51HnTzqAEoJWPUiKcW6O3xeaLujtzRtqg2sZO0VcAX11sQVYrIFlZSxFMHWKKJhYBoNaZesz7vPRTYlD4GszN0REB00HZ5uloE6");
-
-const SingleCourse = () => {
+const SingleCourse = ({}) => {
   const { addToast } = useToasts();
 
   const course = useSelector(state => state.course.course)
@@ -37,16 +36,22 @@ const SingleCourse = () => {
   }, [router.query?.slug])
 
   useEffect(() => {
-    dispatch(courseAccessAction(router.query?.slug))
+    currentUser &&
+    axiosService.get(`/users/subscribe/${router.query?.slug}`)
       .then(res =>
-        setAccess(res.payload?.data)
+        {
+          setAccess(res.data)
+        }
       )
   }, [])
 
   useEffect(() => {
-    router.query?.slug && dispatch(courseAccessAction(router.query?.slug))
+    currentUser &&
+    axiosService.get(`/users/subscribe/${router.query?.slug}`)
       .then(res =>
-        setAccess(res.payload?.data)
+        {
+          setAccess(res.data)
+        }
       )
   }, [router.query?.slug])
 
@@ -60,10 +65,11 @@ const SingleCourse = () => {
       course_id: course?.id,
       confirm: true
     }
-    dispatch(courseRequestAction(payload))
-      .then(res =>
-        setAccess(res.payload?.data)
-      )
+    axiosService.post(`/course_users`, payload)
+    .then(res => {
+      setStatus("success")
+      setAccess(res.data)
+    })
   }
 
   const defCollaps = id => {
@@ -71,10 +77,10 @@ const SingleCourse = () => {
   }
 
   useEffect(() => {
-    router.query?.warning &&  addToast("Please buy the course first", { appearance: 'warning', autoDismiss: true, });
+    router.query?.warning && addToast("Please buy the course first", { appearance: 'warning', autoDismiss: true, });
   }, [router.query?.warning])
-  
 
+  console.log(access)
   return (
     <Layout>
       <div className="product-template-default single single-product postid-92 theme-masterstudy learnht learnht-page learnht-js default stm_preloader_ wpb-js-composer js-comp-ver-6.5.0 vc_responsive has_envato_iframe" id="main" style={{ marginBottom: "386px", }}>
@@ -152,10 +158,10 @@ const SingleCourse = () => {
                       <div className="flex-viewport" style={{ overflow: "hidden", position: "relative", height: "558.109px" }}>
                         <figure className="training-gallery__wrapper" style={{ width: "1000%", transitionDuration: "0s", transform: "translate3d(0px, 0px, 0px)" }}>
                           <div data-thumb-alt="" className="training-gallery__image flex-active-slide" style={{ width: "838px", float: "left", display: "block", position: "relative", overflow: "hidden" }}>
-                            <a href="/images/img.jpg">
-                              <img src={course?.picture || `/images/courset.jpeg`} className="img-thumbnail img-responsive" alt="" />
-                            </a>
-                            <img role="presentation" alt="" src={course?.picture || `/images/courset.jpeg`} className="zoomImg" style={{ position: "absolute", top: "-1.65788px", left: "-74.1599px", opacity: 0, width: "999px", height: "665px", border: "none", maxWidth: "none", maxHeight: "none" }} />
+                            {/* <Link href={course?.picture }> */}
+                              <img src={course?.picture } className="img-thumbnail img-responsive" alt="" width="100%" height="100%"/>
+                            {/* </Link> */}
+                            {/* <img role="presentation" alt="" src={course?.picture } className="zoomImg" style={{ position: "absolute", top: "-1.65788px", left: "-74.1599px", opacity: 0, width: "999px", height: "665px", border: "none", maxWidth: "none", maxHeight: "none" }} /> */}
                           </div>
                         </figure>
                       </div>
@@ -170,12 +176,12 @@ const SingleCourse = () => {
                       </div>
 
                       <span className="price">
-                        {/* <del >
+                        <del >
                           <span className="learnht-Price-amount amount">
                             <bdi>
                               <span className="learnht-Price-currencySymbol">$</span>{course?.requirement.price ? course?.requirement.price : "free"}</bdi>
                           </span>
-                        </del> */}
+                        </del>
                         <ins>
                           <span className="learnht-Price-amount amount">
                             <bdi>
@@ -279,7 +285,7 @@ const SingleCourse = () => {
                         <div className="wpb_wrapper">
                           <div className="wpb_wrapper">
                             <h3 style={{ marginBottom: "21px" }}>COURSE REQUIREMENT</h3>
-                            {course?.requirement.content}
+                            <div dangerouslySetInnerHTML={{__html: course?.requirement.content}} />
                           </div>
                         </div>
                       </div>
@@ -299,7 +305,7 @@ const SingleCourse = () => {
                                     course?.requirement.price ?
                                       status !== 'success' ?
                                         <Elements stripe={stripPromise}>
-                                          <CheckoutForm course={course} currentUser={currentUser} success={() => setStatus("success")} />
+                                          <CheckoutForm setAccess={setAccess} course={course} currentUser={currentUser} success={() => setStatus("success")} />
                                         </Elements>
                                         :
                                         "Your payment has been made successfully."
@@ -375,7 +381,7 @@ const SingleCourse = () => {
                                           <div className="pl-5 pr-5 pb-2">
                                             <div className="">
                                               <span className="">{idx + 1}.{index + 1} - </span>
-                                              <Link href={access ? `/courses/lessons/${lesson.slug}` : `/courses/${course?.slug}?warning='butitfirst'` }>{lesson.title}</Link>
+                                              <Link href={access ? `/courses/lessons/${lesson.slug}` : `/courses/${course?.slug}?warning='butitfirst'`}>{lesson.title}</Link>
                                             </div>
                                           </div>
                                         </div>

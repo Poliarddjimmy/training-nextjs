@@ -12,6 +12,9 @@ const Lesson = () => {
   const lesson = useSelector(state => state.lesson.lesson)
   const currentUser = useSelector(state => state.user.currentUser)
 
+  const dispatch = useDispatch()
+  const router = useRouter()
+
   const [access, setAccess] = useState()
 
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -24,23 +27,23 @@ const Lesson = () => {
     setIsOpen(false);
   }
 
-  const dispatch = useDispatch()
-  const router = useRouter()
+  useEffect(() => {
+    dispatch(showLessonAction(router.query?.slug))
+  }, [])
 
   useEffect(() => {
     router.query?.slug && dispatch(showLessonAction(router.query?.slug))
   }, [router.query?.slug])
 
   useEffect(() => {
-    lesson?.course.slug && dispatch(courseAccessAction(lesson?.course.slug))
+    lesson && dispatch(courseAccessAction(lesson?.course?.slug))
       .then(res => {
         if (res.payload?.data === false) {
-          router.push(`/courses/${lesson?.course.slug}?warning=butitfirst`);
+          router.push(`/courses/${lesson?.course?.slug}?warning=butitfirst`);
         }
-        setAccess(res.payload?.data)
       }
       )
-  }, [lesson?.course.slug])
+  }, [lesson])
 
 
   useEffect(() => {
@@ -68,10 +71,16 @@ const Lesson = () => {
     },
   };
 
-  console.log(access)
-
   return (
-    <LessonLayout next={lesson?.next_lesson} previous={lesson?.previous_lesson} previousChapter={lesson?.previous_lesson_by_chapter} nextChapter={lesson?.next_lesson_by_chapter}>
+    <LessonLayout
+      user={currentUser?.id}
+      lesson={lesson?.id}
+      next={lesson?.next_lesson}
+      previous={lesson?.previous_lesson}
+      previousChapter={lesson?.previous_lesson_by_chapter}
+      nextChapter={lesson?.next_lesson_by_chapter}
+      course={lesson?.course.name}
+    >
       <div className="p-4 d-flex justify-content-between align-items-center">
         <div>
           <i onClick={openModal} className="cursor-pointer bg-dark p-3 text-white rounded-circle fa fa-list-ul fa-1x" ></i>
@@ -85,7 +94,7 @@ const Lesson = () => {
             <h3>Other Lessons</h3>
             <hr style={{ borderWidth: '3px', }} />
             {
-              lesson?.course.chapters.map((chapter, idx) =>
+              lesson?.course?.chapters.map((chapter, idx) =>
                 <div key={chapter.slug}>
                   <strong>{idx + 1} - {chapter.title}</strong>
                   {chapter.lessons.map((lesson, index) =>
@@ -110,7 +119,7 @@ const Lesson = () => {
         <div className="row">
           <div className="d-flex align-items-center justify-content-center">
             <div className="col-lg-8 col-md-12">
-              <h2 className="text-capitalize" style={{ fontFamily: "Montserrat", color: "#273044" }}>{lesson?.chapter.title}</h2>
+              <h2 className="text-capitalize" style={{ fontFamily: "Montserrat", color: "#273044" }}>{lesson?.chapter?.title}</h2>
               <h1 className="text-capitalize" style={{ fontFamily: "Montserrat" }}> {lesson?.title} </h1>
               <div className="mt-5" style={{ fontFamily: "Open Sans", fontSize: "18px" }}>
                 <p>{lesson?.description}</p>

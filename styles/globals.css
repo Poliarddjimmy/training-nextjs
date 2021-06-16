@@ -3203,6 +3203,7 @@ a.text-dark:hover, a.text-dark:focus {
   }
   body {
     min-width: 992px !important;
+    font-size: 18px;
   }
   .container {
     min-width: 992px !important;
