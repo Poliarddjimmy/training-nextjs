@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import LessonLayout from "../../../components/layouts/LessonLayout"
 import { useDispatch, useSelector } from "react-redux";
 import { showLessonAction } from "../../../redux/actions/lessonAction";
 import { useRouter } from "next/router";
 import { courseAccessAction } from "../../../redux/actions/courseAction"
+
+import dynamic from 'next/dynamic'
+const LessonLayout = dynamic(() => import('../../../components/layouts/LessonLayout'))
 
 import Modal from 'react-modal';
 import Link from "next/link";

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Layout from "../../components/layouts/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { showCourseAction, courseAccessAction } from "../../redux/actions/courseAction";
 import Router,{ useRouter } from "next/router";
@@ -10,6 +9,9 @@ import CheckoutForm from "../../components/payments/checkoutForm";
 import { useToasts } from 'react-toast-notifications';
 import { axiosService } from "../../services/ServiceBase";
 import Image from "next/image";
+
+import dynamic from 'next/dynamic'
+const Layout = dynamic(() => import('../../components/layouts/layout'))
 
 const stripPromise = loadStripe("pk_test_51HnTzqAEoJWPUiKcW6O3xeaLujtzRtqg2sZO0VcAX11sQVYrIFlZSxFMHWKKJhYBoNaZesz7vPRTYlD4GszN0REB00HZ5uloE6");
 const SingleCourse = ({}) => {

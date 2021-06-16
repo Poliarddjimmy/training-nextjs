@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import Layout from "../components/layouts/layout";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCoursesAction } from "../redux/actions/courseAction";
 import CourseList from "../components/course/courseList";
+import dynamic from 'next/dynamic'
+const Layout = dynamic(() => import('../components/layouts/layout'))
 
 export default function Courses() {
   const allCourses = useSelector(state => state.course.courses)

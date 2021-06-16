@@ -179,7 +179,7 @@ const Layout = ({ children }) => {
                   <div className="textwidget">
                     <p>LearnHt is complete platform e-learning</p>
                     <p>
-                      <Link href="/"><a className="btn btn-default">learning now</a></Link>
+                      <Link href="/courses"><a className="btn btn-default">learning now</a></Link>
                     </p>
                   </div>
                 </aside>
@@ -189,18 +189,18 @@ const Layout = ({ children }) => {
                   </div>
                   <ul className="style_1">
                     <li className="page_item page-item-1217">
-                      <Link href="/">
-                        <a className="h6">Alerts and stuffs</a>
+                      <Link href="/courses">
+                        <a className="h6">Courses</a>
                       </Link>
                     </li>
                     <li className="page_item page-item-1376">
-                      <Link href="/">
-                        <a className="h6">Custom help</a>
+                      <Link href="/login">
+                        <a className="h6">Account</a>
                       </Link>
                     </li>
                     <li className="page_item page-item-779">
-                      <Link href="/">
-                        <a className="h6">Another link</a>
+                      <Link href="/register">
+                        <a className="h6">Create an account</a>
                       </Link>
                     </li>
                   </ul>

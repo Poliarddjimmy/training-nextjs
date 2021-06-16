@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
-import Layout from "../components/layouts/layout"
 import Link from 'next/link'
 import { useForm, Controller } from "react-hook-form";
 import { loginAction } from "../redux/actions/userAction"
 import { useDispatch, useSelector } from 'react-redux'
 import { useToasts } from 'react-toast-notifications';
 import { useRouter } from "next/router";
+
+import dynamic from 'next/dynamic'
+const Layout = dynamic(() => import('../components/layouts/layout'))
 
 const Login = () => {
   const currentUser = useSelector((state) => state.user.currentUser)
@@ -96,6 +98,10 @@ const Login = () => {
 
                 <div className="form-group">
                   <button type="submit" className="btn btn-lg btn-dark">Login</button>
+                </div>
+
+                <div className="mb-3">
+                  Don't have an account? <Link href="/register"><span className="text-warning cursor-pointer">Register</span></Link>
                 </div>
               </form>
             </div>
