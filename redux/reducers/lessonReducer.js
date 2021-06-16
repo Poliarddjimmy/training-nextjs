@@ -4,6 +4,7 @@ import {
   createLessonAction,
   editLessonAction,
   deleteLessonAction,
+  lessonCompletedAction,
 } from "../actions/lessonAction";
 import { createReducer } from "@reduxjs/toolkit";
 
@@ -36,6 +37,16 @@ const LessonReducer = createReducer(initialState, (builder) => {
       state.lesson = action.payload?.data;
     })
     .addCase(showLessonAction.rejected, (state, action) => {
+      state.loading = false;
+    })
+
+    .addCase(lessonCompletedAction.pending, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(lessonCompletedAction.fulfilled, (state, action) => {
+      state.loading = false;
+    })
+    .addCase(lessonCompletedAction.rejected, (state, action) => {
       state.loading = false;
     })
 

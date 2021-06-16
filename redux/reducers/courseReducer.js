@@ -14,7 +14,6 @@ const initialState = {
   courses: [],
   course: null,
   error: null,
-  accessToCourse: false
 }
 
 const CourseReducer = createReducer(initialState, (builder) => {
@@ -47,7 +46,6 @@ const CourseReducer = createReducer(initialState, (builder) => {
     })
     .addCase(courseAccessAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.accessToCourse = action.payload?.data;
     })
     .addCase(courseAccessAction.rejected, (state, action) => {
       state.loading = false;
@@ -58,7 +56,6 @@ const CourseReducer = createReducer(initialState, (builder) => {
     })
     .addCase(courseRequestAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.accessToCourse = action.payload.data;
     })
     .addCase(courseRequestAction.rejected, (state, action) => {
       state.loading = false;

@@ -8,6 +8,7 @@ import {
   loginAction,
   logoutAction,
   registerAction,
+  completedByMeAction
 } from "../actions/userAction";
 import { createReducer } from "@reduxjs/toolkit";
 
@@ -82,6 +83,16 @@ const UserReducer = createReducer(initialState, (builder) => {
       state.user = action.payload;
     })
     .addCase(showUserAction.rejected, (state, action) => {
+      state.loading = false;
+    })
+
+    .addCase(completedByMeAction.pending, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(completedByMeAction.fulfilled, (state, action) => {
+      state.loading = false;
+    })
+    .addCase(completedByMeAction.rejected, (state, action) => {
       state.loading = false;
     })
 

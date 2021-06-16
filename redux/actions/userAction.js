@@ -80,6 +80,18 @@ export const editUserAction = createAsyncThunk(
   }
 );
 
+export const completedByMeAction = createAsyncThunk(
+  Users.COMPLETED_BY_ME,
+  async (payload, thunkAPI) => {
+    try {
+      const response = await API.completedBy(payload);
+      return response;
+    } catch (e) {
+      console.error(e)
+    }
+  }
+);
+
 export const updatePasswordAction = createAsyncThunk(
   Users.CHANGE_PASSWORD,
   async (payload, thunkAPI) => {

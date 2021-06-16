@@ -6,6 +6,7 @@ const ADD_SESSION = "/users/add_session";
 
 const FETCH_USERS = "/users";
 const SHOW_USER = "/users/show";
+const COMPLETED_BY_ME = "/users/completed/lesson_slug";
 const EDIT_USER = "/users/update";
 const CREATE_USER = "/users/create";
 const DELETE_USER = "/users/delete";
@@ -13,17 +14,18 @@ const CHANGE_PASSWORD = "/users/change-password"
 
 const FETCH_COURSES = "/courses";
 const SHOW_COURSE = "/courses/show";
-const COURSE_ACCESS = "/courses/subscribe/course_id";
+const COURSE_ACCESS = "/courses/subscribe/course_slug";
 const EDIT_COURSE = "/courses/update";
 const CREATE_COURSE = "/courses/create";
 const DELETE_COURSE = "/courses/delete";
 const REQUEST_COURSE = "/courses/request";
 
 const FETCH_LESSONS = "/lessons";
-const SHOW_LESSON = "/lessons/show";
-const EDIT_LESSON = "/lessons/update";
-const CREATE_LESSON = "/lessons/create";
-const DELETE_LESSON = "/lessons/delete";
+const SHOW_LESSON = "/courses/lessons/show";
+const LESSON_COMPLETED = "/courses/lessons/completed";
+const EDIT_LESSON = "/courses/lessons/update";
+const CREATE_LESSON = "/courses/lessons/create";
+const DELETE_LESSON = "/courses/lessons/delete";
 
 
 const Auth = {
@@ -40,6 +42,7 @@ const Users = {
   CREATE_USER,
   DELETE_USER,
   CHANGE_PASSWORD,
+  COMPLETED_BY_ME,
 }
 
 const Courses = {
@@ -49,7 +52,7 @@ const Courses = {
   EDIT_COURSE,
   CREATE_COURSE,
   DELETE_COURSE,
-  REQUEST_COURSE
+  REQUEST_COURSE,
 }
 
 const Lessons = {
@@ -58,6 +61,7 @@ const Lessons = {
   EDIT_LESSON,
   CREATE_LESSON,
   DELETE_LESSON,
+  LESSON_COMPLETED,
 }
 
 export {

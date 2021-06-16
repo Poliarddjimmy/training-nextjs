@@ -27,6 +27,18 @@ export const showLessonAction = createAsyncThunk(
   }
 );
 
+export const lessonCompletedAction = createAsyncThunk(
+  Lessons.LESSON_COMPLETED,
+  async (payload, thunkAPI) => {
+    try {
+      const response = await API.lessonCompleted(payload);
+      return response;
+    } catch (e) {
+      console.error(e)
+    }
+  }
+);
+
 export const createLessonAction = createAsyncThunk(
   Lessons.CREATE_LESSON,
   async (payload, thunkAPI) => {

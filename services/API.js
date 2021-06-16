@@ -21,6 +21,10 @@ class API {
     return axiosService.get(`/users/${payload.id}`)
   }
 
+  static completedBy = (payload) => {
+    return axiosService.get(`/users/completed/${payload}`)
+  }
+
   static editUser = (payload) => {
     return axiosService.put(`/users/${payload.id}`, payload)
   }
@@ -74,6 +78,10 @@ class API {
 
   static showLesson = (payload) => {
     return axiosService.get(`/lessons/${payload}`)
+  }
+
+  static lessonCompleted = (payload) => {
+    return axiosService.post(`/lesson_users/`, payload)
   }
 
   static editLesson = (payload) => {
