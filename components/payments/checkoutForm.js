@@ -24,7 +24,6 @@ const CheckoutForm = ({setAccess, success, course, currentUser}) => {
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: cardElement,
-      // confirm: true
     });
 
     if (error) {
