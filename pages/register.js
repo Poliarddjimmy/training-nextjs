@@ -18,8 +18,11 @@ const Register = () => {
   const router = useRouter()
 
   const onSubmit = data => {
+    let payload = {
+      user: data
+    }
     try {
-      dispatch(registerAction(data))
+      dispatch(registerAction(payload))
     } catch (error) {
       addToast(error.message, { appearance: 'error', autoDismiss: true, });
     }
@@ -43,7 +46,7 @@ const Register = () => {
           <div className="container">
             <Link href="/">Home</Link>
             <i className="fa fa-chevron-right"></i>register
-            </div>
+          </div>
         </nav>
       </div>
       <div className="container">

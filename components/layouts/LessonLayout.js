@@ -38,8 +38,10 @@ const LessonLayout = ({ children, previous, next, previousChapter, nextChapter, 
 
   const completedThis = () => {
     const payload = {
-      user_id: user,
-      lesson_id: lesson,
+      lesson_user: {
+        user_id: user,
+        lesson_id: lesson,
+      }
     }
     dispatch(lessonCompletedAction(payload))
       .then(res =>

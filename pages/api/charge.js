@@ -16,7 +16,7 @@ export default  async (req, res) => {
 
     });
     if (payment) {
-      axiosService.post(`/course_users`, { user_id, course_id, confirm: true })
+      axiosService.post(`/course_users`, { course_user: { user_id, course_id, confirm: true } })
       return res.status(200).json({
         data: true
       })

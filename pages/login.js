@@ -20,8 +20,12 @@ const Login = () => {
   const router = useRouter()
 
   const onSubmit = data => {
+    let payload = {
+      user: data
+    }
+
     try {
-      dispatch(loginAction(data))
+      dispatch(loginAction(payload))
     } catch (error) {
       addToast(error.message, { appearance: 'error', autoDismiss: true, });
     }

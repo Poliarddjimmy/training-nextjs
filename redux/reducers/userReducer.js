@@ -69,7 +69,7 @@ const UserReducer = createReducer(initialState, (builder) => {
     })
     .addCase(fetchUsersAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.users = action.payload.data;
+      state.users = action.payload?.data;
     })
     .addCase(fetchUsersAction.rejected, (state, action) => {
       state.loading = false;
