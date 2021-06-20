@@ -1,88 +1,74 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { showCourseAction, courseAccessAction } from "../../redux/actions/courseAction";
-import Router,{ useRouter } from "next/router";
+import { showCourseAction, courseRequestAction } from "../../redux/actions/courseAction";
+import { useRouter } from "next/router";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../../components/payments/checkoutForm";
 import { useToasts } from 'react-toast-notifications';
-import { axiosService } from "../../services/ServiceBase";
-import Image from "next/image";
 
 import dynamic from 'next/dynamic'
 const Layout = dynamic(() => import('../../components/layouts/layout'))
 
 const stripPromise = loadStripe("pk_test_51HnTzqAEoJWPUiKcW6O3xeaLujtzRtqg2sZO0VcAX11sQVYrIFlZSxFMHWKKJhYBoNaZesz7vPRTYlD4GszN0REB00HZ5uloE6");
-const SingleCourse = ({}) => {
+const SingleCourse = ({ }) => {
   const { addToast } = useToasts();
+  const dispatch = useDispatch()
+  const router = useRouter()
 
-  const course = useSelector(state => state.course.course)
+  const { course, access: haveAccess } = useSelector(state => state.course)
+
   const currentUser = useSelector(state => state.user.currentUser)
 
+  const [showCourse, setShowCourse] = useState(course)
   const [collaps, setCollaps] = useState();
   const [tab, setTab] = useState('description');
   const [status, setStatus] = useState("ready")
 
-  const [access, setAccess] = useState()
+  const [access, setAccess] = useState(haveAccess)
 
   useEffect(() => {
-    status && setStatus(status)
-  }, [status])
-
-  const dispatch = useDispatch()
-  const router = useRouter()
+    dispatch(showCourseAction(router.query?.slug))
+  }, [])
 
   useEffect(() => {
     router.query?.slug && dispatch(showCourseAction(router.query?.slug))
   }, [router.query?.slug])
 
   useEffect(() => {
-    currentUser &&
-    axiosService.get(`/users/subscribe/${router.query?.slug}`)
-      .then(res =>
-        {
-          setAccess(res.data)
-        }
-      )
-  }, [])
+    course && setShowCourse(course)
+  }, [course])
 
   useEffect(() => {
-    currentUser &&
-    axiosService.get(`/users/subscribe/${router.query?.slug}`)
-      .then(res =>
-        {
-          setAccess(res.data)
-        }
-      )
-  }, [router.query?.slug])
+    status && setStatus(status)
+  }, [status])
 
   useEffect(() => {
-    access && setAccess(access)
-  }, [access])
+    haveAccess && setAccess(haveAccess)
+  }, [haveAccess])
 
   const requestCourse = () => {
     const payload = {
-      user_id: currentUser.id,
-      course_id: course?.id,
-      confirm: true
+      course_user: {
+        user_id: currentUser.id,
+        course_id: showCourse?.id,
+        confirm: true
+      }
     }
-    axiosService.post(`/course_users`, payload)
-    .then(res => {
-      setStatus("success")
-      setAccess(res.data)
-    })
+    dispatch(courseRequestAction(payload))
   }
 
   const defCollaps = id => {
     collaps === id ? setCollaps('') : setCollaps(id)
   }
 
-  useEffect(() => {
-    router.query?.warning && addToast("Please buy the course first", { appearance: 'warning', autoDismiss: true, });
-  }, [router.query?.warning])
+  const warning = () => {
+    addToast("Please buy the course first", { appearance: 'warning', autoDismiss: true, });
+  }
 
-  console.log(access)
+
+
   return (
     <Layout>
       <div className="product-template-default single single-product postid-92 theme-masterstudy learnht learnht-page learnht-js default stm_preloader_ wpb-js-composer js-comp-ver-6.5.0 vc_responsive has_envato_iframe" id="main" style={{ marginBottom: "386px", }}>
@@ -93,9 +79,9 @@ const SingleCourse = ({}) => {
               <i className="fa fa-chevron-right"></i>
               <Link href="/courses">All courses</Link>
               <i className="fa fa-chevron-right"></i>
-              <Link href={`/categories/${course?.category.slug}`}><span className="cursor-pointer">{course?.category.name}</span></Link>
+              <Link href={`/categories/${showCourse?.category?.slug}`}><span className="cursor-pointer">{showCourse?.category?.name}</span></Link>
               <i className="fa fa-chevron-right"></i>
-              {course?.name}
+              {showCourse?.name}
             </div>
           </nav>
         </div>
@@ -107,7 +93,7 @@ const SingleCourse = ({}) => {
                 <div className="learnht-notices-wrapper"></div>
                 <div id="product-92" className="post-92 product type-product status-publish has-post-thumbnail product_cat-graphic product_cat-logical-thinking product_cat-management first instock sale featured shipping-taxable purchasable product-type-simple">
                   <div className="single_product_title">
-                    <h2 className={course?.name}>{course?.name}</h2>
+                    <h2 className={showCourse?.name}>{showCourse?.name}</h2>
                   </div>
                   <div className="single_product_after_title">
                     <div className="clearfix">
@@ -118,10 +104,10 @@ const SingleCourse = ({}) => {
                               <i className="fa-icon-stm_icon_category"></i>
                             </div>
                             <div className="meta_values">
-                              <div className="label h6">Category:</div>
+                              <div className="label h6">Category</div>
                               <div className="value h6">
                                 <a href="/">
-                                  {course?.category.name}<span>/</span>
+                                  {showCourse?.category?.name}<span>/</span>
                                 </a>
                               </div>
                             </div>
@@ -137,13 +123,13 @@ const SingleCourse = ({}) => {
                             <span className="learnht-Price-amount amount">
                               <bdi>
                                 <span className="learnht-Price-currencySymbol">$</span>
-                                {course?.requirement.price ? course?.requirement.price : "free"}</bdi>
+                                {showCourse?.requirement?.price ? showCourse?.requirement?.price : "free"}</bdi>
                             </span>
                           </del> */}
                           <ins>
                             <span className="learnht-Price-amount amount">
                               <bdi>
-                                <span className="learnht-Price-currencySymbol"></span>{course?.requirement.price ? '$' + course?.requirement.price : "free"}</bdi>
+                                <span className="learnht-Price-currencySymbol"></span>{showCourse?.requirement?.price ? '$' + showCourse?.requirement?.price : "free"}</bdi>
                             </span>
                           </ins>
                         </span>
@@ -160,10 +146,10 @@ const SingleCourse = ({}) => {
                       <div className="flex-viewport" style={{ overflow: "hidden", position: "relative", height: "558.109px" }}>
                         <figure className="training-gallery__wrapper" style={{ width: "1000%", transitionDuration: "0s", transform: "translate3d(0px, 0px, 0px)" }}>
                           <div data-thumb-alt="" className="training-gallery__image flex-active-slide" style={{ width: "838px", float: "left", display: "block", position: "relative", overflow: "hidden" }}>
-                            {/* <Link href={course?.picture }> */}
-                              <img src={course?.picture } className="img-thumbnail img-responsive" alt="" width="100%" height="100%"/>
+                            {/* <Link href={showCourse?.picture }> */}
+                            {showCourse?.picture && <img src={showCourse?.picture} className="img-thumbnail img-responsive" alt="" width="100%" height="100%" />}
                             {/* </Link> */}
-                            {/* <img role="presentation" alt="" src={course?.picture } className="zoomImg" style={{ position: "absolute", top: "-1.65788px", left: "-74.1599px", opacity: 0, width: "999px", height: "665px", border: "none", maxWidth: "none", maxHeight: "none" }} /> */}
+                            {/* <img role="presentation" alt="" src={showCourse?.picture } className="zoomImg" style={{ position: "absolute", top: "-1.65788px", left: "-74.1599px", opacity: 0, width: "999px", height: "665px", border: "none", maxWidth: "none", maxHeight: "none" }} /> */}
                           </div>
                         </figure>
                       </div>
@@ -181,13 +167,13 @@ const SingleCourse = ({}) => {
                         <del >
                           <span className="learnht-Price-amount amount">
                             <bdi>
-                              <span className="learnht-Price-currencySymbol">$</span>{course?.requirement.price ? course?.requirement.price : "free"}</bdi>
+                              <span className="learnht-Price-currencySymbol">$</span>{showCourse?.requirement?.price ? showCourse?.requirement?.price : "free"}</bdi>
                           </span>
                         </del>
                         <ins>
                           <span className="learnht-Price-amount amount">
                             <bdi>
-                              <span className="learnht-Price-currencySymbol"></span>{course?.requirement.price ? '$' + course?.requirement.price : "free"}</bdi>
+                              <span className="learnht-Price-currencySymbol"></span>{showCourse?.requirement?.price ? '$' + showCourse?.requirement?.price : "free"}</bdi>
                           </span>
                         </ins>
                       </span>
@@ -204,7 +190,7 @@ const SingleCourse = ({}) => {
                               <td className="icon">
                                 <i className="fa-icon-stm_icon_users"></i>
                               </td>
-                              <td className="value h5">{course?.users_count} Students</td>
+                              <td className="value h5">{showCourse?.users_count} Students</td>
                             </tr>
                           </tbody>
                         </table>
@@ -216,7 +202,7 @@ const SingleCourse = ({}) => {
                               <td className="icon">
                                 <i className="fa-icon-stm_icon_clock"></i>
                               </td>
-                              <td className="value h5">Duration: {course?.requirement.duration} hours</td>
+                              <td className="value h5">Duration: {showCourse?.requirement?.duration} hours</td>
                             </tr>
                           </tbody>
                         </table>
@@ -228,7 +214,7 @@ const SingleCourse = ({}) => {
                               <td className="icon">
                                 <i className="fa-icon-stm_icon_bullhorn"></i>
                               </td>
-                              <td className="value h5">Lectures: {course?.lessons_count}</td>
+                              <td className="value h5">Lectures: {showCourse?.lessons_count}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -273,7 +259,7 @@ const SingleCourse = ({}) => {
                           <div className="">
                             <div className="wpb_wrapper">
                               <h3 style={{ marginBottom: "21px" }}>COURSE DESCRIPTION</h3>
-                              {course?.description}
+                              {showCourse?.description}
                             </div>
                           </div>
                         </div>
@@ -287,7 +273,7 @@ const SingleCourse = ({}) => {
                         <div className="wpb_wrapper">
                           <div className="wpb_wrapper">
                             <h3 style={{ marginBottom: "21px" }}>COURSE REQUIREMENT</h3>
-                            <div dangerouslySetInnerHTML={{__html: course?.requirement.content}} />
+                            <div dangerouslySetInnerHTML={{ __html: showCourse?.requirement?.content }} />
                           </div>
                         </div>
                       </div>
@@ -304,7 +290,7 @@ const SingleCourse = ({}) => {
                               {
                                 (currentUser) ?
                                   !access ?
-                                    course?.requirement.price ?
+                                    showCourse?.requirement?.price ?
                                       status !== 'success' ?
                                         <Elements stripe={stripPromise}>
                                           <CheckoutForm setAccess={setAccess} course={course} currentUser={currentUser} success={() => setStatus("success")} />
@@ -351,7 +337,7 @@ const SingleCourse = ({}) => {
                         <div className="wpb_wrapper">
                           <div className="course_lessons_section">
                             {
-                              course?.chapters?.map((chapter, idx) =>
+                              showCourse?.chapters?.map((chapter, idx) =>
                                 <div key={chapter.slug} className="panel-group" id="accordion_4023" role="tablist" aria-multiselectable="true">
                                   <div className={`panel panel-default ${collaps === chapter.slug ? 'panel-collapsed' : ''}`}>
                                     <div className="panel-heading" role="tab" id="heading_tab7188" >
@@ -381,9 +367,13 @@ const SingleCourse = ({}) => {
                                       chapter.lessons.map((lesson, index) =>
                                         <div key={index} id={chapter.slug} className={`panel-collapse collapse ${collaps === chapter.slug ? 'in' : ''}`} style={{ height: collaps !== chapter.slug && "0px" }} aria-expanded={collaps === chapter.slug} role="tabpanel" aria-labelledby="heading_tab7188">
                                           <div className="pl-5 pr-5 pb-2">
-                                            <div className="">
+                                            <div className="cursor-pointer" onClick={() => !access && warning()} >
                                               <span className="">{idx + 1}.{index + 1} - </span>
-                                              <Link href={access ? `/courses/lessons/${lesson.slug}` : `/courses/${course?.slug}?warning='butitfirst'`}>{lesson.title}</Link>
+                                              {access ?
+                                                <Link href={`/courses/lessons/${lesson.slug}`}>{lesson.title}</Link>
+                                                :
+                                                <span className="cursor-pointer">{lesson.title}</span>
+                                              }
                                             </div>
                                           </div>
                                         </div>
@@ -410,13 +400,13 @@ const SingleCourse = ({}) => {
                     {/* <del >
                       <span className="learnht-Price-amount amount">
                         <bdi>
-                          <span className="learnht-Price-currencySymbol">$</span>{course?.requirement.price ? course?.requirement.price : "free"}</bdi>
+                          <span className="learnht-Price-currencySymbol">$</span>{showCourse?.requirement?.price ? showCourse?.requirement?.price : "free"}</bdi>
                       </span>
                     </del> */}
                     <ins>
                       <span className="learnht-Price-amount amount">
                         <bdi>
-                          <span className="learnht-Price-currencySymbol"></span>{course?.requirement.price ? '$' + course?.requirement.price : "free"}</bdi>
+                          <span className="learnht-Price-currencySymbol"></span>{showCourse?.requirement?.price ? '$' + showCourse?.requirement?.price : "free"}</bdi>
                       </span>
                     </ins>
                   </span>
@@ -430,7 +420,7 @@ const SingleCourse = ({}) => {
                           <td className="icon">
                             <i className="fa-icon-stm_icon_users"></i>
                           </td>
-                          <td className="value h5">{course?.users_count} Students</td>
+                          <td className="value h5">{showCourse?.users_count} Students</td>
                         </tr>
                       </tbody>
                     </table>
@@ -442,7 +432,7 @@ const SingleCourse = ({}) => {
                           <td className="icon">
                             <i className="fa-icon-stm_icon_clock"></i>
                           </td>
-                          <td className="value h5">Duration: {course?.requirement.duration} hours</td>
+                          <td className="value h5">Duration: {showCourse?.requirement?.duration} hours</td>
                         </tr>
                       </tbody>
                     </table>
@@ -454,7 +444,7 @@ const SingleCourse = ({}) => {
                           <td className="icon">
                             <i className="fa-icon-stm_icon_bullhorn"></i>
                           </td>
-                          <td className="value h5">Lectures: {course?.lessons_count}</td>
+                          <td className="value h5">Lectures: {showCourse?.lessons_count}</td>
                         </tr>
                       </tbody>
                     </table>
