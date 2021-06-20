@@ -1,9 +1,10 @@
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import { useSelector, useDispatch } from 'react-redux'
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { logoutAction } from "../../redux/actions/userAction"
 import { useToasts } from 'react-toast-notifications';
+import Modal from 'react-modal';
 
 const Layout = ({ children }) => {
 
@@ -12,15 +13,45 @@ const Layout = ({ children }) => {
   const { addToast } = useToasts();
   const router = useRouter();
 
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
   const logout = () => {
     try {
-      dispatch(logoutAction()) 
+      dispatch(logoutAction())
       addToast('You are logged out', { appearance: 'success', autoDismiss: true, });
       router.push('/login')
     } catch (error) {
       addToast(error.message, { appearance: 'error', autoDismiss: true, });
     }
   }
+
+  const customStyles = {
+    content: {
+      top: '20.5%',
+      right: '11%',
+      left: 'auto',
+      bottom: 'auto',
+      width: '160px',
+      backgroundColor: '#ECF0F1',
+      // boxShadow: '1px 1px 1px 2px rgba(239,183,103,0.5)',
+      fontSize: '1.1em',
+      borderWidth: '0.5px',
+      borderColor: '#DEE2E6',
+      zIndex: 1
+      // transform: 'translate(-50%, -50%)'
+    },
+    overlay: {
+      backgroundColor: 'transparent !important'
+    },
+  };
 
   return <Fragment>
     <div id="wrapper">
@@ -140,18 +171,45 @@ const Layout = ({ children }) => {
                     </div>
                   </div> */}
                   <div className="collapse navbar-collapse pull-right">
-                    <ul className="header-menu clearfix">
+                    <ul className="header-menu clearfix align-items-center justify-content-center d-flex">
                       <li className={`menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-3293 ${router.pathname === '/' ? 'current-menu-item current_page_item current-menu-parent current_page_parent current_page_ancestor current-menu-ancestor' : ''}`}>
                         <Link href="/">Home</Link>
                         <div className="magic_line"
                           style={{ maxWidth: "45.9062px" }}></div>
                       </li>
-                      <li className="menu-item menu-item-type-post_type menu-item-object-page   menu-item-has-children menu-item-756">
+                      <li className="">
                         <Link href="/courses/" aria-current="page">Courses</Link>
-
                       </li>
 
+                      {currentUser &&
+                        <li className="cursor-pointer">
+                          <div className="collapse navbar-collapse pull-right mr-4" onClick={openModal}>
+                            <div className="bg-light text-dark  p-3" style={{ borderRadius: '30px' }}>
+                              <i className="fa-icon-stm_icon_user text-dark mr-2" ></i>
+                              Hello, {currentUser.name?.substr(0, 8)}{currentUser.name?.length > 8 && '...'}
+                              <i className="fa fa-chevron-circle-down ml-1" ></i>
+                            </div>
+                          </div>
+                        </li>
+                      }
+
                     </ul>
+
+                    <Modal
+                      isOpen={modalIsOpen}
+                      onRequestClose={closeModal}
+                      style={customStyles}
+                      contentLabel="Example Modal"
+                    >
+                      <div className="">
+                        <Link href="/dashboard"><b className="cursor-pointer d-block mb-2"><i className="fa fa-hashtag mr-2"></i> Dashboard</b></Link>
+                        <Link href="/dashboard/courses"><b className="cursor-pointer d-block mr-2"><i className="fa fa-book mr-2"></i> My Courses</b></Link>
+                        <hr className="border-dark" />
+                        <b className="cursor-pointer d-flex justify-content-center align-items-center" onClick={logout}> Logout</b>
+                      </div>
+
+                    </Modal>
+
                   </div>
                 </div>
               </div>
