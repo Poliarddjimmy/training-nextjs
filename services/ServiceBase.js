@@ -1,8 +1,6 @@
 import axios from "axios";
 import { CURRENT_API_URL } from '../utils/config';
-// import { store } from '../redux/store'
 import { Auth } from '../redux/actions/types';
-
 import { isExpired, decodeToken } from "react-jwt";
 
 const axiosService = axios.create({
@@ -24,6 +22,14 @@ const interceptor = store => {
     (err) => Promise.reject(err),
   );
 
+
+  //automatic logout if token is expired
+  // const isMyTokenExpired = isExpired(store.getState().user.token);
+  // if (isMyTokenExpired) {
+    store.dispatch({
+      type: "/users/logout/pending" 
+    })
+  // }
   // Add a response interceptor to automatically save the token we got from the server
   // to the state
   axiosService.interceptors.response.use(
@@ -46,9 +52,7 @@ const interceptor = store => {
     async (error) => {
       if (error.message.includes("401")) {
         store.dispatch({
-          // type: "/users/logout/fulfiled" 
           type: "/users/logout/pending" 
-          // type: Auth.LOGOUT
         })
       }
       if (error.response?.data?.token) {

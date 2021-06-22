@@ -104,7 +104,7 @@ const LessonLayout = ({ children, previous, next, previousChapter, nextChapter, 
         <div id="footer_copyright">
           <div className="container">
             <div className="row p-4">
-              <div className="col-md-4 ">
+              <div className="col-lg-4 col-md-12 ">
                 {previous ? <Link href={`/courses/lessons/${previous}`}>
                   <span className="d-flex align-items-center cursor-pointer" style={{ fontSize: "18px" }}>
                     <span className="text-white border d-flex justify-content-center align-items-center rounded-circle p-2 mr-2 bg-warning" style={{ width: "45px", height: "45px" }} >
@@ -128,14 +128,14 @@ const LessonLayout = ({ children, previous, next, previousChapter, nextChapter, 
                   </Link>
                 }
               </div>
-              <div className="col-md-4">
+              <div className="col-lg-4 col-md-12">
                 <div className="d-flex justify-content-center align-items-center" title={!completed ? 'Click on to complete this lesson' : ''}>
                   <span onClick={()=>!completed && completedThis()} className={`text-white border d-flex justify-content-center align-items-center cursor-pointer rounded-circle p-2 ml-2 bg-${completed ? 'warning' : 'default'}`} style={{ width: "55px", height: "55px" }}>
                     <i className="fa fa-check fa-2x" ></i>
                   </span>
                 </div>
               </div>
-              <div className="col-md-4">
+              <div className="col-lg-4 col-md-12">
                 <div>
                   {next ? <span onClick={() => completed ? goToTheNextLesson(next) : incomplete()}>
                     <span className="d-flex justify-content-end align-items-center cursor-pointer" style={{ fontSize: "18px" }}>

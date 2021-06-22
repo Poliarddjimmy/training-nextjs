@@ -22,7 +22,6 @@ const LessonReducer = createReducer(initialState, (builder) => {
     })
     .addCase(fetchLessonsAction.fulfilled, (state, action) => {
       state.loading = false;
-      console.log(action.payload?.data?.lessons)
       state.lessons = action.payload?.data?.lessons;
     })
     .addCase(fetchLessonsAction.rejected, (state, action) => {
