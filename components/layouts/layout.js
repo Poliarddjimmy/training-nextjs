@@ -4,24 +4,15 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { logoutAction } from "../../redux/actions/userAction"
 import { useToasts } from 'react-toast-notifications';
-import Modal from 'react-modal';
+import useDropdownMenu from 'react-accessible-dropdown-menu-hook';
 
 const Layout = ({ children }) => {
-
   const currentUser = useSelector((state) => state.user.currentUser)
   const dispatch = useDispatch()
   const { addToast } = useToasts();
   const router = useRouter();
 
-  const [modalIsOpen, setIsOpen] = useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
+  const { buttonProps, itemProps, isOpen, setIsOpen } = useDropdownMenu(6);
 
   const logout = () => {
     try {
@@ -32,26 +23,6 @@ const Layout = ({ children }) => {
       addToast(error.message, { appearance: 'error', autoDismiss: true, });
     }
   }
-
-  const customStyles = {
-    content: {
-      top: '20.5%',
-      right: '11%',
-      left: 'auto',
-      bottom: 'auto',
-      width: '160px',
-      backgroundColor: '#ECF0F1',
-      // boxShadow: '1px 1px 1px 2px rgba(239,183,103,0.5)',
-      fontSize: '1.1em',
-      borderWidth: '0.5px',
-      borderColor: '#DEE2E6',
-      zIndex: 1
-      // transform: 'translate(-50%, -50%)'
-    },
-    overlay: {
-      backgroundColor: 'transparent !important'
-    },
-  };
 
   return <Fragment>
     <div id="wrapper">
@@ -183,7 +154,7 @@ const Layout = ({ children }) => {
 
                       {currentUser &&
                         <li className="cursor-pointer">
-                          <div className="collapse navbar-collapse pull-right mr-4" onClick={openModal}>
+                          <div className="collapse navbar-collapse pull-right mr-4" {...buttonProps}>
                             <div className="bg-light text-dark  p-3" style={{ borderRadius: '30px' }}>
                               <i className="fa-icon-stm_icon_user text-dark mr-2" ></i>
                               Hello, {currentUser.name?.substr(0, 8)}{currentUser.name?.length > 8 && '...'}
@@ -195,21 +166,12 @@ const Layout = ({ children }) => {
 
                     </ul>
 
-                    <Modal
-                      isOpen={modalIsOpen}
-                      onRequestClose={closeModal}
-                      style={customStyles}
-                      contentLabel="Example Modal"
-                    >
-                      <div className="">
-                        <Link href="/dashboard"><b className="cursor-pointer d-block mb-2"><i className="fa fa-hashtag mr-2"></i> Dashboard</b></Link>
-                        <Link href="/dashboard/courses"><b className="cursor-pointer d-block mr-2"><i className="fa fa-book mr-2"></i> My Courses</b></Link>
-                        <hr className="border-dark" />
-                        <b className="cursor-pointer d-flex justify-content-center align-items-center" onClick={logout}> Logout</b>
-                      </div>
-
-                    </Modal>
-
+                    <div className={`connected-menu ${isOpen ? '' : 'd-none'}`} role='menu'>
+                      <Link  {...itemProps[0]} href="/dashboard"><b className="cursor-pointer d-block mb-2"><i className="fa fa-hashtag mr-2"></i> Dashboard</b></Link>
+                      <Link {...itemProps[1]} href="/dashboard/courses"><b className="cursor-pointer d-block mr-2"><i className="fa fa-book mr-2"></i> My Courses</b></Link>
+                      <hr className="border-dark" />
+                      <b className="cursor-pointer d-flex justify-content-center align-items-center" onClick={logout}> Logout</b>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -220,7 +182,6 @@ const Layout = ({ children }) => {
     </div>
 
     <div id="main" style={{ marginBottom: "386px", }}>
-
       {children}
     </div>
 
